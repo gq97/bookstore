@@ -1,0 +1,152 @@
+.layout {
+    margin:50px auto;
+    width: 990px;
+}
+.table-list {
+    border: 1px solid #ddd;
+    background: #FFFEFD;
+    margin-bottom: 20px;
+}
+.table-list .table1 {
+    height: 36px;
+    border-bottom: 1px solid #ddd;
+    background: #F3F3F3;
+}
+
+.table-list .table1 div{
+    height: 36px;
+    float: left;
+    line-height: 36px;
+    text-align: center;
+    color: #666;
+}
+.product1 {
+    border-right: 1px solid #fff;
+    text-align: center;
+    width: 435px;
+}
+.price1 {
+    text-align: center;
+    border-right: 1px solid #fff;
+    width: 127px;
+}
+.price2 {
+    border-right: 1px solid #fff;
+    width: 127px;
+}
+.quantity1 {
+    border-right: 1px solid #fff;
+    width: 127px;
+}
+.operation1 {
+    width: 127px;
+}
+
+.shop {
+    color: #666;
+    border-bottom: 1px dashed #ddd;
+    background: #F9F9F9;
+}
+.shop {
+    position: relative;
+}
+.shop, div.proms {
+    height: 30px;
+    clear: both;
+    line-height: 30px;
+    padding: 0 0 0 40px;
+    background: #E5FDE5;
+}
+.shop .group-check {
+    position: absolute;
+    left: 20px;
+    top: 3px;
+    bottom: 3px;
+}
+.trow {
+    height: 65px;
+    line-height: 65px;
+    border-bottom: 1px solid #ddd;
+    clear: both;
+}
+ .myCheckbox {
+    width: 35px;
+}
+
+.myCheckbox {
+    position: relative;
+}
+.trow .myCheckbox input{
+    position: absolute;
+    left: 20px;
+    top: 23px;
+}
+.trow div {
+    height: 65px;
+    float: left;
+    text-align: center;
+    color: #333;
+}
+
+.cartImg {
+    margin:5px 5px;
+    width: 55px;
+}
+.bLeft {
+    margin-left: 15px;
+    font-size: small;
+}
+.progress1{
+    margin-bottom: 20px;
+    background:white url(/img/bread-buy.jpg) no-repeat 0 0; height:33px;
+}
+
+.count {
+    background: #F3F3F3;
+    height: 40px;
+    position: relative;
+    clear: both;
+}
+.balance {
+    width: 450px;
+    position: absolute;
+    right: 0;
+    line-height: 30px;
+}
+.balance label {
+    width: 110px;
+    right: 150px;
+    font-weight: bolder;
+    display: block;
+    position: absolute;
+}
+ .balance p{
+    width: 120px;
+    right: 105px;
+    text-align: right;
+    display: block;
+    position: absolute;
+    color: #CC0000;
+}
+ 
+ .button-wrap {
+     height: 80px;
+     clear: both;
+ }
+
+
+.button-wrap a{background-color:#f2f2f2;border:none;color:#333;position:relative;display:block;padding:0;margin:0;zoom:1;outline:none;}
+.button-wrap a b{display:block;position:absolute;top:0;left:0;z-index:9;background-image:url(/img/balance-button.jpg);cursor:pointer;}
+.button-wrap .continue,.button-wrap .continue b{width:142px;height:45px;}
+.button-wrap .continue{float:left;}
+.button-wrap .balance2{float:right;}
+.button-wrap .balance2,.button-wrap .balance2 b{width:208px;height:45px;}
+.button-wrap .continue b{background-position:0 -4px;}
+.button-wrap .balance2 b{background-position:-142px -4px;}
+
+.progress2 {
+    margin:150px 30px;background:white url(/img/bread-buy.jpg) no-repeat 0 -39; height:33px;
+}
+.progress3 {
+    margin:150px 30px;background:white url(/img/bread-buy.jpg) no-repeat 0 -78; height:33px;
+}

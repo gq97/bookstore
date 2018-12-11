@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th = "http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<body>
+    <title>三味书屋</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrapValidator.js"></script>
+    <!--link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script-->
+    <!--script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script-->
+
+    <!--设置导航栏高度-->
+    <style>
+
+        .navbar-nav > li > a, .navbar-brand {
+            padding-top:4px !important;
+            padding-bottom:0 !important;
+            height: 28px;
+        }
+        .navbar {min-height:28px !important;}
+    </style>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">三味书屋</a>
+        </div>
+        <div th:if="${username} eq null">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a data-toggle="modal" href="#myModal1"><span class="glyphicon glyphicon-user"></span> 注册</a></li>
+                <li><a  href="/login"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+            </ul>
+        </div>
+        <div th:if="${username} ne null">
+            <ul class="nav navbar-nav navbar-right">
+                <!--li><a data-toggle="modal" href="#myModal1"><span class="glyphicon glyphicon-user"></span> 注册</a></li-->
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" th:text="${username}">
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a data-toggle="modal" href="#myModal2">修改密码</a></li>
+                        <li><a href="#">收货地址</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/logout">退出</a></li>
+                    </ul>
+                </li>
+                <li><a  th:href="@{/cart}"><span class="glyphicon glyphicon-shopping-cart"></span> 购物车</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!--注册模态框-->
+<div class="modal fade" id="myModal1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!--模态框头部-->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">注册</h4>
+            </div>
+
+            <!--模态框body-->
+            <div class="modal-body">
+                <form id="registerForm" method="POST" action="/register">
+                    <div claas="form-group">
+                        <label>用户名：</label>
+                        <input type="text" class="form-control" id = "username" name="username">
+                    </div>
+                    <div class="form-group">
+                        <label>邮箱：</label>
+                        <input type="text" class="form-control" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label>密码：</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <div class="form-group">
+                        <label>确认密码：</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+                    </div>
+                    <div class="text-right">
+                        <span id="returnMessage" class="glyphicon"></span>
+                        <button type="button" class="btn btn-default right" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="submitBtn">注册</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+    <!--修改密码模态框-->
+    <div class="modal fade" id="myModal2">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!--模态框头部-->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabe2">修改密码</h4>
+                </div>
+
+                <!--模态框body-->
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <form id="updateForm" method="POST" action="/updateUser">
+                            <div claas="form-group">
+                                <label>用户名：</label>
+                                <input type="text" readonly="readonly" class="form-control" id = "username" name="username" th:value="${username}">
+                            </div>
+                            <div class="form-group">
+                                <label>原密码：</label>
+                                <input type="password" class="form-control" id="oldPassword" name="oldPassword">
+                            </div>
+                            <div class="form-group">
+                                <label>新密码：</label>
+                                <input type="password" class="form-control" id="newPassword" name="newPassword">
+                            </div>
+                            <div class="form-group">
+                                <label>确认密码：</label>
+                                <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword">
+                            </div>
+                            <div class="text-right">
+                                <span id="returnMessage2" class="glyphicon"></span>
+                                <button type="button" class="btn btn-default right" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary" id="submitBtn2">修改</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+<script src="js/registerValidator.js"></script>
+<script src="js/updatePasswordValidator.js"></script>
+
+</body>
+
+</html>

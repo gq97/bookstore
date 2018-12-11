@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/bookDetails.css">
+<link rel="stylesheet" href="css/index.css">
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="/js/addNumJquery.min.js"></script>
+<script src="/js/bookDetails.js"></script>
+
+
+<body>
+
+<div>
+
+    <div th:replace="~{common/header::body}"></div>
+
+    <div class="book">
+
+        <!-- 导航栏 -->
+        <div class="mybar" >
+            <ul>
+                <li><a th:href="@{/listAll}" class="active" th:align="center">全部书籍</a> </li>
+                <li  th:each="category:${categoryList}">
+                    <a th:href="@{/listBooks(categoryName=${category.category_name})}"  th:text="${category.category_name}" th:align="center" name="categoryName" id="categoryName"></a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 右侧书籍展示 -->
+        <div class="img">
+            <a target="_blank" href="#">
+                <img th:src="@{${book.book_url}}" alt="图片文本描述" width="300" height="300">
+            </a>
+        </div>
+
+
+        <div class="book-right">
+            <h3><b th:text="${book.book_name}"></b></h3>
+            <p th:text="''+${book.book_introduce}"></p>
+
+            <!--分割线-->
+            <!--hr style="border:1px dotted #C0C0C0" /-->
+
+            <div class="myMargin">
+                定价：
+                <span  style="text-decoration:line-through;" th:text="${book.book_price}"></span>
+            </div>
+            <div class="myMargin">
+                现价：
+                <span class="price" th:text="${#numbers.formatDecimal(book.book_price*book.book_discount*0.1, 0, 2)}+'（'+${book.book_discount}+'折）'"></span>
+            </div>
+
+
+                <h5 class="myMargin" th:text="'作者：'+${book.book_author}"></h5>
+                <div class="myMargin">
+                    分类：
+                    <a th:href="@{/listBooks(categoryName=${book.book_category})}"  th:text="${book.book_category}" th:align="center" name="category" id="category"></a>
+                </div>
+
+            <form id="cartForm" method="post" >
+                <div class="myMargin">
+                    数量：
+                    <input id="min" name="" type="button" value="-" class="btn btn-xs btn-default" />
+                    <input id="book_amount" name="book_amount" type="text" value="1" style="width:30px;text-align: center"/>
+                    <input id="add" name="" type="button" value="+" class="btn btn-xs btn-default" />
+                    <input id="book_id" name="book_id" th:value="${book.book_id}" hidden="hidden">
+                </div>
+
+                <h5 class="myMargin" th:text="'库存：'+${book.book_amount}"></h5>
+                <input type="hidden" id="storage"  th:value="${book.book_amount}">
+
+                <button  class="btn btn-warning addToCart"
+                        onclick="addToCart()"> 加入购物车
+                </button>
+            </form>
+        </div>
+
+    </div>
+    <!-- end for book -->
+
+    <div class="box">
+        <ul class="nav">
+            <li class="navI">
+                <input class="navI-radio" name="nav" type="radio" id="kc" checked>
+                <label class="navI-tit" for="kc">商品详情</label>
+                <div class="navI-txt">
+                    <ul class="introduce">
+                        <li th:text="'作&nbsp者：'+${book.book_author}"></li>
+                        <li th:text="'出版社：'+${book.book_publisher}"></li>
+                    </ul>
+                    <ul class="introduce">
+                        <li th:text="'出版时间：'+${book.book_publishDate}"></li>
+                        <li th:text="'ISBN：'+${book.book_ISBN}"></li>
+                    </ul>
+                    <br>
+                    <!--分割线-->
+                    <hr style="border:1px dotted #C0C0C0" />
+                    <h4>目录：</h4>
+                    <p th:text="${book.book_content}"></p>
+                </div>
+
+            </li>
+            <li class="navI">
+                <input class="navI-radio" name="nav" type="radio" id="xx">
+                <label class="navI-tit" for="xx">商品评价</label>
+                <div class="navI-txt ml1">
+                    <p>暂无评价</p>
+                </div>
+
+            </li>
+        </ul>
+    </div>
+
+</div>
+</body>
+<script>
+    var book_amount = $("#book_amount").val();
+    var book_id = $("#book_id").val();
+    var data = "book_id="+book_id+"&book_amount="+book_amount;
+    function addToCart() {
+        $.ajax({
+            type: "POST",
+            url: "[[@{/addToCart}]]",
+            data: data,
+            dataType: "json",
+            async: false,
+            success: function(result) {
+                if(result == true) {
+                    alert("添加成功");
+                } else {
+                    alert("添加失败");
+                }
+            }
+        });
+    }
+
+</script>
+</html>
+

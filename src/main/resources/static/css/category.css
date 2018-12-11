@@ -1,0 +1,24 @@
+.nav1 ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: #f1f1f1;
+}
+
+.nav1 li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.nav1 li a.active {
+    background-color: #000;//#4CAF50;
+    color: white;
+}
+
+.nav1 li a:hover:not(.active) {
+    background-color: #000;//#4CAF50;//#ffa07a; //#555;
+    color: white;
+}

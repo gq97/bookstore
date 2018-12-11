@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/listBooks.css">
+<link rel="stylesheet" href="css/index.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap3.3.7/bootstrap.min.js"></script>
+
+<body>
+<div>
+
+    <div th:replace="~{common/header::body}"></div>
+
+
+    <!-- 搜索框 -->
+    <div class="search">
+        <form class="bs-example bs-example-form" role="form">
+            <div class="row">
+
+                <div class="col-lg-7">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <div class="form-group">
+                                <select class="form-control" style="width:90px;float:left;" id="source" name="source">
+                                    <option value="0" selected="selected">书名</option>
+                                    <option value="1">作者</option>
+                                    <option value="2">出版社</option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="text" name="keyword" id="keyword"  style="width:450px;" th:placeholder="${keyword}" class="form-control">
+                        <!-- -->
+                        <span class="input-group-btn">
+                                <button class="btn btn-default" style="float: left;" type="button" id="searchSubmit">
+                                    Go!
+                                </button>
+                        </span>
+                    </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+            </div><!-- /.row -->
+        </form>
+    </div>
+    <!-- 搜索框-end -->
+
+
+    <div class="book">
+        <p>
+            <a class="font-large" th:href="@{/listAll}">全部书籍</a> >
+            <span class="font-mid" th:text="'在 '+${sourceC}+' 下 搜索 “'+${keyword}+'”'"></span>
+        </p>
+        <h5 class="font-mid" th:text="'“'+${keyword}+'”'+'找到'+${books_num}+'件相关书籍'"></h5>
+
+
+        <!-- 右侧书籍展示 -->
+        <div class="col-md-8 books" >
+            <div th:each="book:${books}"class="responsive">
+                <div class="img">
+                    <a target="_blank" th:href="@{/bookDetails(book_id=${book.book_id})}">
+                        <img th:src="@{${book.book_url}}" alt="图片文本描述" width="300" height="300">
+                    </a>
+                    <div class="desc" th:text="${book.book_name}"></div>
+                    <div class="price" th:text="'￥'+${book.book_price}" align="center"></div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+    </div>
+</div>
+
+</body>
+</html>
+

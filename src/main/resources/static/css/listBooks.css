@@ -1,0 +1,39 @@
+.book{
+    margin: 10px 150px 0px 150px;
+}
+
+.books div.img {
+    margin: 0px 10px 10px 10px;
+    border: 1px solid #ccc;
+    float: left;
+    width: 180px;
+}
+
+.books div.img:hover {
+    border: 1px solid #777;
+}
+
+.books div.img img {
+    width: 100%;
+    height: auto;
+}
+
+.books div.desc {
+    padding: 15px;
+    text-align: center;
+}
+
+.books div.price{
+    color: #FF0000;
+}
+
+.font-large {
+    font-size: large;
+}
+
+.font-mid {
+    font-size: medium;
+}
+.search {
+    margin: 70px 150px 0px 405px; //上右下左
+}

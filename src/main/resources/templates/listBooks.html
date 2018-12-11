@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/listBooks.css">
+<link rel="stylesheet" href="css/index.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap3.3.7/bootstrap.min.js"></script>
+
+<body>
+<div>
+
+    <div th:replace="~{common/header::body}"></div>
+
+
+    <!-- 搜索框 -->
+    <div class="search">
+        <form class="bs-example bs-example-form" role="form">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="input-group">
+                        <form id="searchForm">
+                            <div class="input-group-btn">
+                                <div class="form-group">
+                                    <select class="form-control" style="width:90px;float:left;" id="source" name="source">
+                                        <option value="0" selected="selected">书名</option>
+                                        <option value="1">作者</option>
+                                        <option value="2">出版社</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <input type="text" name="keyword" id="keyword"  style="width:450px;" class="form-control">
+                        <!-- -->
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" style="float: left;" type="button" id="searchSubmit">
+                                    Go!
+                                </button>
+					        </span>
+
+                        </form>
+
+                    </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+            </div><!-- /.row -->
+        </form>
+    </div>
+    <!-- 搜索框-end -->
+
+
+    <div class="book">
+
+        <!-- 导航栏 -->
+        <div class="mybar" >
+            <ul>
+                <li><a th:href="@{/listAll}" class="active" th:align="center">全部书籍</a> </li>
+                <li  th:each="category:${categoryList}">
+                    <a th:href="@{/listBooks(categoryName=${category.category_name})}"  th:text="${category.category_name}" th:align="center" name="categoryName" id="categoryName"></a>
+                </li>
+            </ul>
+        </div>
+
+
+        <!-- 右侧书籍展示 -->
+        <div class="col-md-8 books" >
+            <div th:each="book:${books}"class="responsive">
+                <div class="img">
+                    <a target="_blank" th:href="@{/bookDetails(book_id=${book.book_id})}">
+                        <img th:src="@{${book.book_url}}" alt="图片文本描述" width="300" height="300">
+                    </a>
+                    <div class="desc" th:text="${book.book_name}"></div>
+                    <div class="price" th:text="'￥'+${book.book_price}" align="center"></div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+    </div>
+</div>
+<script>
+    var form = $('#searchForm');
+    var source = $("#source").val();
+    $("#searchSubmit").click(function() {
+        //keyword放click里面，否则获取不到搜索框的值
+        var keyword = document.getElementById("keyword").value;
+        var data = "source="+source+"&keyword="+keyword;
+        window.location.href="/search?"+data;
+    })
+</script>
+</body>
+</html>
+
