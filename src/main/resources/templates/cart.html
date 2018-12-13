@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -22,6 +21,11 @@
         <div class="progress1">
         </div>
 
+        <div th:if="${carts} eq null" class="jumbotron" style="margin-bottom:0">
+            <h1>您的购物车为空</h1>
+            <p>快去添加心爱的书籍到购物车吧！</p>
+        </div>
+
         <div class="table-list" th:if="${carts} ne null">
             <div class="table1">
                 <div class="myCheckbox">
@@ -34,12 +38,12 @@
             </div>
 
             <div class="shop proms">
-                <input class="group-check" id="selectAll" type="checkbox" checked name="groupCheck">
+                <input class="group-check" id="selectAll" onclick="sum()" type="checkbox" checked name="groupCheck">
                 <b class="bLeft">全选</b>
             </div>
             <div class="trow" th:each="cart:${carts}">
                 <div class="myCheckbox">
-                    <input name="item"  type="checkbox"  class="select" checked="checked">
+                    <input name="item" onclick="sum()" type="checkbox"  class="select" checked="checked">
                 </div>
 
                 <div class="product1">
@@ -52,16 +56,16 @@
                 </div>
                 <div class="price1" th:id="price1+${cart.book.book_id}" th:text="'￥'+${#numbers.formatDecimal(cart.book.book_price*cart.book.book_discount*0.1, 0, 2)}">
                 </div>
-                <input th:id="hidden_price1+${cart.book.book_id}" hidden="hidden" th:value="${#numbers.formatDecimal(cart.book.book_price*cart.book.book_discount*0.1, 0, 2)}">
+                <input th:id="hidden_price1+${cart.book.book_id}" name="priceList" hidden="hidden" th:value="${#numbers.formatDecimal(cart.book.book_price*cart.book.book_discount*0.1, 0, 2)}">
                 <div class="quantity1">
                     <input th:id="min+${cart.book.book_id}" th:onclick="'min1('+${cart.book.book_id}+')'" type="button" value="-" class="btn btn-xs btn-default" />
-                    <input th:id="book_amount+${cart.book.book_id}" type="text" value="1" th:value="${cart.book_amount}" th:onkeyup="'getPrice2('+${cart.book.book_id}+')'" style="height: 20px;width:30px;text-align: center"/>
+                    <input th:id="book_amount+${cart.book.book_id}" name="book_amountList" type="text" value="1" th:value="${cart.book_amount}" th:onkeyup="'getPrice2('+${cart.book.book_id}+')'" style="height: 20px;width:30px;text-align: center"/>
                     <input th:id="add+${cart.book.book_id}" th:onclick="'add1('+${cart.book.book_id}+')'" type="button" value="+" class="btn btn-xs btn-default" />
                     <input type="hidden" th:id="storage+${cart.book.book_id}" th:value="${cart.book.book_amount}">
                 </div>
                 <div class="price2" name="price2" th:id="price2+${cart.book.book_id}" th:text="'￥'+${#numbers.formatDecimal(cart.book.book_price*cart.book.book_discount*cart.book_amount*0.1, 0, 2)}">
                 </div>
-                <input th:id="hidden_price2+${cart.book.book_id}" hidden="hidden" th:value="${#numbers.formatDecimal(cart.book.book_price*cart.book.book_discount*cart.book_amount*0.1, 0, 2)}">
+                <input th:id="hidden_price2+${cart.book.book_id}" hidden="hidden" th:value="${#numbers.formatDecimal(cart.book.book_price*cart.book.book_discount*0.1, 0, 2)*cart.book_amount}">
                 <div class="operation1">
                     <a th:onclick="'deleteProduct(\''+${cart.book.book_id}+'\')'" th:text="'删除'"></a>
                 </div>
@@ -76,10 +80,7 @@
 
         </div>
 
-        <div th:if="${carts} eq null" class="jumbotron" style="margin-bottom:0">
-            <h1>您的购物车为空</h1>
-            <p>快去添加心爱的书籍到购物车吧！</p>
-        </div>
+
 
         <div class="button-wrap">
             <a class="continue" href="javascript:history.back(-1)">
@@ -99,7 +100,31 @@
         sum();
     });
     function sum(){
-        var totalPrice = 0.0;
+        var sum = 0.0;
+        var checkBoxList = document.getElementsByName("item");
+        var priceList = document.getElementsByName("priceList");
+        var book_amountList = document.getElementsByName("book_amountList");
+        var totalPrice = document.getElementById("totalPrice");
+        var cart_status = [];
+        for(var i = 0; i<priceList.length; i++) {
+            if(checkBoxList[i].checked == true) {
+                cart_status.push(1);
+                sum += parseFloat(priceList[i].value).toFixed(2) * parseInt(book_amountList[i].value);
+            } else {
+                cart_status.push(0);
+            }
+        }
+        totalPrice.innerHTML = "￥"+sum.toFixed(2);
+        $.ajax({
+            async: false,
+            cache: false,
+            traditional: true,
+            type: 'POST',
+            data: {cart_status: cart_status},
+            url: "/updateCart_status",
+            success: function(result) {
+            }
+        });
     }
     $("#selectAll").click(function(){
         if($(this).prop("checked")) {
@@ -133,7 +158,7 @@
         var price1 = $("#hidden_price1"+id).val();
         var price2 = document.getElementById("price2"+id);
         updateCart(id, book_amount);
-        price2.innerText = "￥"+(parseFloat(price1) * parseFloat(book_amount)).toFixed(2);
+        price2.innerText = "￥"+(parseFloat(price1).toFixed(2) * parseInt(book_amount));
         sum();
     };
     function min1(id) {
@@ -145,7 +170,7 @@
         if (parseInt(book_amount.val()) > 1){
             book_amount.val(Math.abs(parseInt(book_amount.val()))-1);
             updateCart(id, book_amount.val());
-            price2.innerText = "￥"+(parseFloat(price1) * parseFloat(book_amount.val())).toFixed(2);
+            price2.innerText = "￥"+(parseFloat(price1).toFixed(2) * parseInt(book_amount.val()));
             sum();
         }
     };
@@ -159,7 +184,7 @@
         if(parseInt(book_amount.val()) < max_t) {
             book_amount.val(Math.abs(parseInt(book_amount.val()))+1);
             updateCart(id, book_amount.val());
-            price2.innerText = "￥"+(parseFloat(price1) * parseFloat(book_amount.val())).toFixed(2);
+            price2.innerText = "￥"+(parseFloat(price1).toFixed(2) * parseInt(book_amount.val()));
             sum();
         }
     };

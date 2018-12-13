@@ -1,14 +1,8 @@
 package cn.edu.ncu.bookstore.controller;
 
 import cn.edu.ncu.bookstore.config.MyUserDetails;
-import cn.edu.ncu.bookstore.entity.Book;
-import cn.edu.ncu.bookstore.entity.Cart;
-import cn.edu.ncu.bookstore.entity.CartKey;
-import cn.edu.ncu.bookstore.entity.User;
-import cn.edu.ncu.bookstore.repository.BookRepository;
-import cn.edu.ncu.bookstore.repository.CartRepository;
-import cn.edu.ncu.bookstore.repository.CategoryRepository;
-import cn.edu.ncu.bookstore.repository.UserRepository;
+import cn.edu.ncu.bookstore.entity.*;
+import cn.edu.ncu.bookstore.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,8 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import sun.misc.Request;
 
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +33,9 @@ public class MainController {
 
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private ReceiveRepository receiveRepository;
 
     public boolean isExistUser(){
         MyUserDetails myUserDetails = (MyUserDetails)SecurityContextHolder
@@ -95,6 +94,9 @@ public class MainController {
         return "login";
     }
 
+    private Timestamp getCurrentTime() {
+        return new Timestamp(new Date().getTime());
+    }
 
     //添加到购物车
     @RequestMapping(value = "/addToCart", method = RequestMethod.POST)
@@ -102,14 +104,15 @@ public class MainController {
         User user = getUser();
         String user_id = user.getUser_id();
         Book book = bookRepository.findById(book_id).get();
-        CartKey cart_id = new CartKey(user_id, book_id, 1);
+        CartKey cart_id = new CartKey(user_id, book_id);
         Cart cart;
         if(cartRepository.findById(cart_id).isPresent()) {
-            //取出之前购物车的同类商品且cart_status为1
+            //取出之前购物车的同类商品
             cart = cartRepository.findById(cart_id).get();
             cart.setBook_amount(cart.getBook_amount() + book_amount);
+            cart.setUpdate_time(getCurrentTime());
         } else {
-            cart = new Cart(user.getUser_id(), user, book.getBook_id(), book, 1, book_amount);
+            cart = new Cart(user_id, user, book_id, book,  book_amount, 1, getCurrentTime(), getCurrentTime());
         }
         cartRepository.save(cart);
         return "redirect:json/true.json";
@@ -164,13 +167,7 @@ public class MainController {
     public String cart(Model model) {
         User user = getUser();
         List<Cart> carts = cartRepository.findCartByUser(user);
-        double price = 0;
-        for(Cart cart : carts) {
-            price += cart.getBook().getBook_price() * cart.getBook().getBook_discount() * cart.getBook_amount() * 0.1;
-        }
         model.addAttribute("carts", carts);
-        model.addAttribute("totalPrice", new DecimalFormat("0.00").format(price));
-
         return "cart";
     }
 
@@ -178,7 +175,7 @@ public class MainController {
     @RequestMapping(value = "/deleteFromCart")
     public String deleteFromCart(Model model, Integer book_id) {
         User user = getUser();
-        CartKey cartKey =  new CartKey(user.getUser_id(), book_id, 1);
+        CartKey cartKey =  new CartKey(user.getUser_id(), book_id);
         cartRepository.deleteById(cartKey);
         return "redirect:json/true.json";
     }
@@ -187,17 +184,84 @@ public class MainController {
     @RequestMapping(value = "/updateCart")
     public String updateCart(Model model, Integer book_id, Integer book_amount) {
         User user = getUser();
-        CartKey cartKey = new CartKey(user.getUser_id(), book_id, 1);
+        CartKey cartKey = new CartKey(user.getUser_id(), book_id);
         Cart cart = cartRepository.findById(cartKey).get();
         cart.setBook_amount(book_amount);
+        cart.setUpdate_time(getCurrentTime());
         cartRepository.save(cart);
-        List<Cart> carts = cartRepository.findCartByUser(user);
-        double price = 0;
-        for(Cart cart1 : carts) {
-            price += cart1.getBook().getBook_price() * cart1.getBook().getBook_discount() * cart1.getBook_amount() * 0.1;
-        }
-        model.addAttribute("totalPrice", new DecimalFormat("0.00").format(price));
         return "redirect:json/true.json";
+    }
+
+    //更新购物车中商品的状态
+    @RequestMapping(value = "/updateCart_status")
+    public String updateCart_status(Model model, Integer[] cart_status) {
+        User user = getUser();
+        List<Cart> carts = cartRepository.findCartByUser(user);
+        int i = 0;
+        for(Cart cart : carts) {
+            cart.setCart_status(cart_status[i]);
+            cartRepository.save(cart);
+            i++;
+        }
+        return "redirect:json/true.json";
+    }
+
+    //确认收货信息
+    @RequestMapping("/confirmOrder")
+    public String confirmOrder(Model model) {
+        String user_id  = getUser().getUser_id();
+        List<Receive> receives = receiveRepository.findReceiveByUser_id(user_id);
+        model.addAttribute("receives", receives);
+        int i = 0, receive_default = -1;
+        for(Receive receive : receives) {
+            if(receive.getReceive_isDefault() == true) {
+                receive_default = i;
+            }
+            i++;
+        }
+        model.addAttribute("receive_default", receive_default);
+        return "confirmOrder";
+    }
+
+    //新增地址
+    @RequestMapping(value = "/addReceive")
+    public String addReceive(Model model, String receive_name,String receive_address, String receive_street, String receive_phone) {
+        System.out.println("receive_name "+receive_name);
+        User user = getUser();
+        Receive receive = new Receive(receive_address, receive_street, receive_phone, receive_name, false, user);
+        receiveRepository.save(receive);
+        return "redirect: json/true.json";
+    }
+
+    //更新地址
+    @RequestMapping(value = "/updateReceive")
+    public String updateReceive(Model model, Integer receive_id, String receive_name,String receive_address, String receive_street, String receive_phone) {
+        User user = getUser();
+        Receive receive = receiveRepository.findById(receive_id).get();
+        receive.setReceive_name(receive_name);
+        receive.setReceive_address(receive_address);
+        receive.setReceive_street(receive_street);
+        receive.setReceive_phone(receive_phone);
+        receiveRepository.save(receive);
+        return "redirect: json/true.json";
+    }
+
+    //更新默认地址
+    @RequestMapping(value = "/updateReceive_default")
+    public String updateReceive_default(Model model, Integer receive_id, String receive_name,String receive_address, String receive_street, String receive_phone) {
+        User user = getUser();
+        int result = receiveRepository.setDefaultReceiveByUser(user, false);
+        System.out.println("result"+ result);
+        Receive receive = receiveRepository.findById(receive_id).get();
+        receive.setReceive_isDefault(true);
+        receiveRepository.save(receive);
+        return "redirect: json/true.json";
+    }
+
+    @RequestMapping("/test")
+    public String newC(Model model) {
+        System.out.println("test");
+        return "redirect: json/true.json";
     }
 
 }

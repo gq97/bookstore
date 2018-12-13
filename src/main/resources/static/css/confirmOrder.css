@@ -1,0 +1,90 @@
+div {
+    display: block;
+}
+
+.myMargin-left {
+    margin-left: 20px;
+}
+
+.layout {
+    margin:50px auto;
+    width: 990px;
+}
+
+.progress2 {
+    margin-bottom: 20px;background:white url(/img/bread-buy.jpg) no-repeat 0 -39px; height:33px;
+}
+.receiveInfo {
+
+}
+
+.receiveInfo fieldset {
+    width: 100%;
+    padding: 20px;
+    margin: auto;
+    border: 1px solid #ccc;
+}
+
+.receiveInfo legend{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.receiveInfo #receive_address{
+    width: 200px;
+    height: 25px;
+    margin-bottom: 10px;
+}
+
+.receiveInfo .btn {
+    width: 80px;
+    height: 30px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    outline: none;
+    background-color: #aaa;
+    margin: 0 20px;
+}
+
+.receiveInfo .btn:disabled{
+    background-color:#ccc;
+}
+
+.receiveInfo #addr-choice{
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+    margin-bottom: 20px;
+}
+
+.receiveInfo #title-wrap li,#addr-wrap li{
+    list-style: none;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+}
+
+.receiveInfo #title-wrap li{
+    width:200px;
+    height: 45px;
+    line-height: 45px;
+    margin-bottom: 10px;
+}
+
+.receiveInfo .titleSel{
+    border-bottom: 2px solid #23B7E5;
+}
+
+.receiveInfo #addr-wrap li{
+    width: 83px;
+    height: 30px;
+    border-radius: 4px;
+    line-height: 30px;
+    font-size: 14px;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+.receiveInfo #addr-wrap li:hover{
+    background-color: #23B7E5;
+}

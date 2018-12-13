@@ -13,8 +13,8 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.AUTO) //设置自增
     private int orders_id;
 
-    @OneToOne
-    @JoinColumn(name = "rec_id", referencedColumnName = "rec_id")
+    @ManyToOne
+    @JoinColumn(name = "receive_id", referencedColumnName = "receive_id")
     private Receive receive;
 
     private double orders_money;

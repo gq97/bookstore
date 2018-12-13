@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<meta charset="UTF-8">
+<head>
+    <title>确认订单信息</title>
+</head>
+
+<link rel="stylesheet" href="css/confirmOrder.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+
+<script src="js/confirmOrder.js"></script>
+
+<body>
+<div>
+    <div th:replace="~{common/header::body}"></div>
+
+    <div class="layout">
+        <div class="progress2"></div>
+        <h3><b>收货信息</b></h3>
+        <div>
+            <div th:if="${receives ne null}">
+                <div th:each="receive : ${receives}">
+                    <p th:if="${receive.receive_isDefault ne false}">
+                        <input  checked="checked" type="radio" name="radio" th:id="radio+${receive.receive_id}" onclick="usePreAddress()">
+                        <span th:text="${receive.receive_name}+' '+${receive.receive_address}+' '+${receive.receive_street}+' '+${receive.receive_phone}"></span>
+                        <input type="hidden" th:value="${receive.receive_name}" th:id="receive_name+${receive.receive_id}">
+                        <input type="hidden" th:value="${receive.receive_address}" th:id="receive_address+${receive.receive_id}">
+                        <input type="hidden" th:value="${receive.receive_street}" th:id="receive_street+${receive.receive_id}">
+                        <input type="hidden" th:value="${receive.receive_phone}" th:id="receive_phone+${receive.receive_id}">
+                        <a th:onclick="'updateReceive('+${receive.receive_id}+')'">&nbsp修改</a>&nbsp[默认]
+                    </p>
+
+                    <p th:if="${receive.receive_isDefault eq false}">
+                        <input  type="radio" name="radio" th:id="radio+${receive.receive_id}" onclick="usePreAddress()">
+                        <span th:text="${receive.receive_name}+' '+${receive.receive_address}+' '+${receive.receive_street}+' '+${receive.receive_phone}"></span>
+                        <input type="hidden" th:value="${receive.receive_name}" th:id="receive_name+${receive.receive_id}">
+                        <input type="hidden" th:value="${receive.receive_address}" th:id="receive_address+${receive.receive_id}">
+                        <input type="hidden" th:value="${receive.receive_street}" th:id="receive_street+${receive.receive_id}">
+                        <input type="hidden" th:value="${receive.receive_phone}" th:id="receive_phone+${receive.receive_id}">
+                        <a th:onclick="'updateReceive('+${receive.receive_id}+')'">&nbsp修改</a>
+                        <a th:onclick="'updateReceive_default('+${receive.receive_id}+')'">&nbsp设为默认</a>
+                    </p>
+                </div>
+            </div>
+            <!-- class="jumbotron" -->
+            <input style="margin: 10px 0;" type="radio" id="newReceiveRadio"  name="radio"onclick="useNewAddress()">&nbsp使用新的收货地址
+            <div>
+                    <div id="newAddress" style="display: none">
+                        <div class="receiveInfo" >
+                            <label style="margin: 10px 0;">收货人：
+                                <input type="text" id="receive_name">
+                            </label>
+                            <fieldset>
+                                <label for="receive_address">您选择的是：
+                                    <input type="text" id="receive_address">
+                                </label>
+                                <div id="addr-choice">
+                                    <ul id="title-wrap">
+                                        <li value="0">省份</li>
+                                        <li value="1">城市</li>
+                                        <li value="2">县区</li>
+                                    </ul>
+                                    <div id="show-panel">
+                                        <ul id="addr-wrap">
+                                        </ul>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn met2">确定</button>
+                            </fieldset>
+                            <label style="margin: 10px 0;">街道：
+                                <input type="text" id="receive_street">
+                            </label><br>
+                            <label style="margin: 10px 0;">手机：
+                                <input type="text" id="receive_phone">
+                            </label><br>
+                        </div>
+                        <input type="button" onclick="addReceive()" class="btn btn-default btn-danger" value="确认收货人信息">
+                    </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+<script src="js/city.js"></script>
+<script src="js/method02.js"></script>
+
+
+</html>
+

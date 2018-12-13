@@ -8,53 +8,86 @@ public class Receive {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int rec_id;
+    private int receive_id;
 
-    private String rec_addr;
+    private String receive_address;
 
-    private String rec_phone;
+    private String receive_street;
 
-    private String rec_name;
+    private String receive_phone;
+
+    private String receive_name;
+
+    private Boolean receive_isDefault;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
-    public Receive(){
+    public Receive(){}
 
+    public Receive(String receive_address, String receive_street, String receive_phone, String receive_name, Boolean receive_isDefault, User user) {
+        this.receive_address = receive_address;
+        this.receive_street = receive_street;
+        this.receive_phone = receive_phone;
+        this.receive_name = receive_name;
+        this.receive_isDefault = receive_isDefault;
+        this.user = user;
     }
 
-    public int getRec_id() {
-        return rec_id;
+    public int getReceive_id() {
+        return receive_id;
     }
 
-    public void setRec_id(int rec_id) {
-        this.rec_id = rec_id;
+    public void setReceive_id(int receive_id) {
+        this.receive_id = receive_id;
     }
 
-    public String getRec_addr() {
-        return rec_addr;
+    public String getReceive_address() {
+        return receive_address;
     }
 
-    public void setRec_addr(String rec_addr) {
-        this.rec_addr = rec_addr;
+    public void setReceive_address(String receive_address) {
+        this.receive_address = receive_address;
     }
 
-    public String getRec_phone() {
-        return rec_phone;
+    public String getReceive_street() {
+        return receive_street;
     }
 
-    public void setRec_phone(String rec_phone) {
-        this.rec_phone = rec_phone;
+    public void setReceive_street(String receive_street) {
+        this.receive_street = receive_street;
     }
 
-    public String getRec_name() {
-        return rec_name;
+    public String getReceive_phone() {
+        return receive_phone;
     }
 
-    public void setRec_name(String rec_name) {
-        this.rec_name = rec_name;
+    public void setReceive_phone(String receive_phone) {
+        this.receive_phone = receive_phone;
     }
 
+    public String getReceive_name() {
+        return receive_name;
+    }
 
+    public void setReceive_name(String receive_name) {
+        this.receive_name = receive_name;
+    }
+
+    public Boolean getReceive_isDefault() {
+        return receive_isDefault;
+    }
+
+    public void setReceive_isDefault(Boolean receive_isDefault) {
+        this.receive_isDefault = receive_isDefault;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

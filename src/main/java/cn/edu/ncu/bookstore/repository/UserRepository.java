@@ -9,6 +9,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, String> {
+
     List<User> findByEmail(String user_email);
 
     @Query(value = "select user_password from user where email = ?", nativeQuery = true)
@@ -17,10 +18,4 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query(value = "select user_password from user where user_id = ?", nativeQuery = true)
     String getUserPasswordByUser_id(String user_id);
 
-    //User findByUsername(String user_id);
-    /*
-    User saveOrUpdateUser(User user);
-    void deleteUser(Long id);
-    User getUserById(Long id);
-    List<User> userList();*/
 }

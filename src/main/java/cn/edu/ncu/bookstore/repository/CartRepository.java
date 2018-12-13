@@ -10,8 +10,11 @@ import java.util.List;
 
 public interface CartRepository extends CrudRepository<Cart, CartKey> {
 
-    //通过用户ID查询购物车
+    //通过用户ID查询购物车内未结算的商品
    // @Query(value = "select c.* from Cart c JOIN User u ON c.user = u where c.user_id=?1")
     List<Cart> findCartByUser(User user);
 
+    //通过用户ID查询购物车内未结算的商品
+    @Query(value = "select c from Cart c where c.user=?1")
+    List<Cart> findCartByUser_id(User user);
 }

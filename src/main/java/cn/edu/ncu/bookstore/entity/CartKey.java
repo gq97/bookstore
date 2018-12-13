@@ -1,7 +1,6 @@
 package cn.edu.ncu.bookstore.entity;
 
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
@@ -12,14 +11,12 @@ public class CartKey implements Serializable {
 
     private int book_id;
 
-    private int cart_status;
 
     public CartKey(){}
 
-    public CartKey(String user_id, int book_id, int cart_status) {
+    public CartKey(String user_id, int book_id) {
         this.user_id = user_id;
         this.book_id = book_id;
-        this.cart_status = cart_status;
     }
 
     public String getUser_id() {
@@ -38,13 +35,6 @@ public class CartKey implements Serializable {
         this.book_id = book_id;
     }
 
-    public int getCart_status() {
-        return cart_status;
-    }
-
-    public void setCart_status(int cart_status) {
-        this.cart_status = cart_status;
-    }
 
     @Override
     public String toString() {

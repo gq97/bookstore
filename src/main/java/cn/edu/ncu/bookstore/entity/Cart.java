@@ -1,7 +1,8 @@
 package cn.edu.ncu.bookstore.entity;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.sql.Timestamp;
+
 
 @Entity
 public class Cart {
@@ -20,17 +21,26 @@ public class Cart {
     @JoinColumn(name = "book_id", referencedColumnName = "book_id")
     private Book book;
 
-    private int book_amount;
+    private Integer cart_status;
+
+    private Integer book_amount;
+
+    private Timestamp add_time;
+
+    private Timestamp update_time;
 
     public Cart(){
 
     }
 
-    public Cart( String user_id, User user, Integer book_id, Book book, Integer cart_status, int book_amount) {
-        this.cart_id = new CartKey(user_id, book_id, cart_status);
+    public Cart(String user_id, User user, Integer book_id, Book book,  Integer book_amount, Integer cart_status, Timestamp add_time, Timestamp update_time) {
+        this.cart_id = new CartKey(user_id, book_id);
         this.user = user;
         this.book = book;
         this.book_amount = book_amount;
+        this.cart_status = cart_status;
+        this.add_time = add_time;
+        this.update_time = update_time;
     }
 
     public User getUser() {
@@ -57,12 +67,36 @@ public class Cart {
         this.cart_id = cart_id;
     }
 
-    public int getBook_amount() {
+    public Integer getBook_amount() {
         return book_amount;
     }
 
-    public void setBook_amount(int book_amount) {
+    public void setBook_amount(Integer book_amount) {
         this.book_amount = book_amount;
+    }
+
+    public Integer getCart_status() {
+        return cart_status;
+    }
+
+    public void setCart_status(Integer cart_status) {
+        this.cart_status = cart_status;
+    }
+
+    public Timestamp getAdd_time() {
+        return add_time;
+    }
+
+    public void setAdd_time(Timestamp add_time) {
+        this.add_time = add_time;
+    }
+
+    public Timestamp getUpdate_time() {
+        return update_time;
+    }
+
+    public void setUpdate_time(Timestamp update_time) {
+        this.update_time = update_time;
     }
 
 }
