@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<meta charset="UTF-8">
+<head>
+    <title>成功提交订单</title>
+</head>
+
+<link rel="stylesheet" href="css/confirmOrder.css">
+
+
+<body>
+<div>
+    <div th:replace="~{common/header::body}"></div>
+
+    <div class="layout">
+        <div class="progress3"></div>
+        <h3><b>快去我的订单查看吧！</b></h3>
+        <a th:href="@{/order}" class="btn btn-default btn-success" th:text="'我的订单'"> </a>
+    </div>
+
+</div>
+
+</body>
+
+</html>
+

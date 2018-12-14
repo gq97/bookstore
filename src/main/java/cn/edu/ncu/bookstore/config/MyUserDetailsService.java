@@ -32,7 +32,6 @@ public class MyUserDetailsService implements UserDetailsService {
         if(!myUserDetails.isExist()){
             throw new UsernameNotFoundException("Username is not found!");
         }
-        System.out.println("loadUserByName...");
         return myUserDetails;
     }
 

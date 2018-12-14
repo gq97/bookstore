@@ -6,20 +6,16 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="css/bookDetails.css">
 <link rel="stylesheet" href="css/index.css">
-
 <link rel="stylesheet" href="css/bootstrap.min.css">
-<script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/popper.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="/js/addNumJquery.min.js"></script>
-<script src="/js/bookDetails.js"></script>
-
-
+<script src="/js/jquery.min.js"></script>
+<script src="/js/layer.js"></script>
+<script src="js/bookDetails.js"></script>
 <body>
 
 <div>
 
     <div th:replace="~{common/header::body}"></div>
+
 
     <div class="book">
 
@@ -64,7 +60,6 @@
                     <a th:href="@{/listBooks(categoryName=${book.book_category})}"  th:text="${book.book_category}" th:align="center" name="category" id="category"></a>
                 </div>
 
-            <form id="cartForm" method="post" >
                 <div class="myMargin">
                     数量：
                     <input id="min" name="" type="button" value="-" class="btn btn-xs btn-default" />
@@ -79,7 +74,6 @@
                 <button  class="btn btn-warning addToCart"
                         onclick="addToCart()"> 加入购物车
                 </button>
-            </form>
         </div>
 
     </div>
@@ -125,6 +119,7 @@
     var book_id = $("#book_id").val();
     var data = "book_id="+book_id+"&book_amount="+book_amount;
     function addToCart() {
+        var addResult = "";
         $.ajax({
             type: "POST",
             url: "[[@{/addToCart}]]",
@@ -133,12 +128,19 @@
             async: false,
             success: function(result) {
                 if(result == true) {
-                    alert("添加成功");
-                } else {
-                    alert("添加失败");
+                    addResult = "true";
                 }
             }
         });
+        if(addResult == "true") {
+            layer.confirm('前往购物车？', {icon: 1, title:'添加成功',btn:['前往购物车','继续浏览']},
+                function(){
+                    window.location.href = "/cart";
+                },
+                function(index){
+                    layer.close(index);}
+            );
+        }
     }
 
 </script>

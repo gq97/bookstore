@@ -1,5 +1,7 @@
 package cn.edu.ncu.bookstore.entity;
 
+import cn.edu.ncu.bookstore.entity.Orders.Orders;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -24,8 +26,13 @@ public class User {
 
     private String phone;
 
-    @OneToMany(mappedBy = "user")
+    //一对多，一个用户有多条收货信息
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Receive> receive;
+
+    //一对多，一个用户有多个订单
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Orders> orders;
 
     public User() {//无参默认构造器
     }
@@ -77,6 +84,14 @@ public class User {
 
     public void setReceive(Set<Receive> receive) {
         this.receive = receive;
+    }
+
+    public Set<Orders> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Orders> orders) {
+        this.orders = orders;
     }
 }
 

@@ -2,6 +2,9 @@ package cn.edu.ncu.bookstore.controller;
 
 import cn.edu.ncu.bookstore.config.MyUserDetails;
 import cn.edu.ncu.bookstore.entity.*;
+import cn.edu.ncu.bookstore.entity.Orders.Orders;
+import cn.edu.ncu.bookstore.entity.Orders.OrdersPK;
+import cn.edu.ncu.bookstore.entity.Orders.Orders_details;
 import cn.edu.ncu.bookstore.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -14,10 +17,7 @@ import sun.misc.Request;
 
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class MainController {
@@ -36,6 +36,12 @@ public class MainController {
 
     @Autowired
     private ReceiveRepository receiveRepository;
+
+    @Autowired
+    private OrdersRepository ordersRepository;
+
+    @Autowired
+    private Orders_detailsRepository orders_detailsRepository;
 
     public boolean isExistUser(){
         MyUserDetails myUserDetails = (MyUserDetails)SecurityContextHolder
@@ -171,12 +177,32 @@ public class MainController {
         return "cart";
     }
 
+    //四舍五入保留两位小数(扩大了100倍）
+    public int toDecimalFormat(double number) {
+        return (int)(number * 100 + 0.5);
+    }
+
+    //计算所勾选中的总金额
+    public double cal_totalPrice() {
+        int sum = 0;
+        User user = getUser();
+        List<Cart> carts = cartRepository.findCartByUser(user);
+        for(Cart cart : carts) {
+            if(cart.getCart_status() == 1) {
+                int price = toDecimalFormat(cart.getBook().getBook_price()*cart.getBook().getBook_discount()*0.1);
+                sum += price * cart.getBook_amount();
+            }
+        }
+        return sum / 100.0;
+    }
+
     //删除购物车中的某件商品
     @RequestMapping(value = "/deleteFromCart")
     public String deleteFromCart(Model model, Integer book_id) {
         User user = getUser();
         CartKey cartKey =  new CartKey(user.getUser_id(), book_id);
         cartRepository.deleteById(cartKey);
+        model.addAttribute("totalPrice", cal_totalPrice());
         return "redirect:json/true.json";
     }
 
@@ -189,6 +215,7 @@ public class MainController {
         cart.setBook_amount(book_amount);
         cart.setUpdate_time(getCurrentTime());
         cartRepository.save(cart);
+        model.addAttribute("totalPrice", cal_totalPrice());
         return "redirect:json/true.json";
     }
 
@@ -203,6 +230,7 @@ public class MainController {
             cartRepository.save(cart);
             i++;
         }
+        model.addAttribute("totalPrice", cal_totalPrice());
         return "redirect:json/true.json";
     }
 
@@ -220,6 +248,7 @@ public class MainController {
             i++;
         }
         model.addAttribute("receive_default", receive_default);
+        model.addAttribute("totalPrice", cal_totalPrice());
         return "confirmOrder";
     }
 
@@ -230,6 +259,7 @@ public class MainController {
         User user = getUser();
         Receive receive = new Receive(receive_address, receive_street, receive_phone, receive_name, false, user);
         receiveRepository.save(receive);
+        model.addAttribute("totalPrice", cal_totalPrice());
         return "redirect: json/true.json";
     }
 
@@ -243,6 +273,7 @@ public class MainController {
         receive.setReceive_street(receive_street);
         receive.setReceive_phone(receive_phone);
         receiveRepository.save(receive);
+        model.addAttribute("totalPrice", cal_totalPrice());
         return "redirect: json/true.json";
     }
 
@@ -251,17 +282,47 @@ public class MainController {
     public String updateReceive_default(Model model, Integer receive_id, String receive_name,String receive_address, String receive_street, String receive_phone) {
         User user = getUser();
         int result = receiveRepository.setDefaultReceiveByUser(user, false);
-        System.out.println("result"+ result);
         Receive receive = receiveRepository.findById(receive_id).get();
         receive.setReceive_isDefault(true);
         receiveRepository.save(receive);
+        model.addAttribute("totalPrice", cal_totalPrice());
         return "redirect: json/true.json";
     }
 
-    @RequestMapping("/test")
-    public String newC(Model model) {
-        System.out.println("test");
-        return "redirect: json/true.json";
+    //成功提交订单
+    @RequestMapping(value = "/submitOrder")
+    public String submitOrder(Model model, Integer receive_id) {
+        User user = getUser();
+        Receive receive = receiveRepository.findById(receive_id).get();
+        double orders_money = cal_totalPrice();
+        int orders_status = 1;
+        Timestamp orders_time = getCurrentTime();
+        Orders orders = new Orders(receive, orders_money, orders_status, orders_time, user);
+        ordersRepository.save(orders);
+        List<Cart> carts = cartRepository.findCartByUser(user);
+        int orders_id = orders.getOrders_id();
+        for(Cart cart : carts) {
+            if(cart.getCart_status() == 1) {
+                int book_id = cart.getBook().getBook_id();
+                Book book = cart.getBook();
+                int book_number = cart.getBook_amount();
+                //减少库存
+                bookRepository.updateBook_amount(book_id, -book_number);
+                //添加到订单详情
+                OrdersPK ordersPK = new OrdersPK(book_id, orders_id);
+                Orders_details orders_details = new Orders_details(ordersPK, orders, book, book_number);
+                orders_detailsRepository.save(orders_details);
+            }
+        }
+        //删除选中的购物车
+        cartRepository.deleteCartByUser(user, 1);
+        return "submitOrder";
+    }
+
+
+    @RequestMapping("/order")
+    public String order(Model model) {
+        return "order";
     }
 
 }

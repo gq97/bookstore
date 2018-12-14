@@ -2,8 +2,10 @@ package cn.edu.ncu.bookstore.repository;
 
 import cn.edu.ncu.bookstore.entity.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -29,5 +31,11 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     //通过出版社模糊查询
     @Query("select b from Book b where b.book_publisher = ?1")
     List<Book> findByBook_publiser(String book_publisher);
+
+    //根据book_id修改库存
+    @Transactional
+    @Modifying
+    @Query("update Book b set b.book_amount = b.book_amount + ?2 where b.book_id = ?1")
+    int updateBook_amount(Integer book_id, Integer delta);
 
 }

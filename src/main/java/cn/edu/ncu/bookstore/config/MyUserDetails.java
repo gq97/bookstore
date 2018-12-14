@@ -29,7 +29,6 @@ public class MyUserDetails implements UserDetails {
             password = user.get().getUser_password();
             exist = true;
         }
-        System.out.println("Entering MyUserDetails...");
     }
 
     @Override

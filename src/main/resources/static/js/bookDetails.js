@@ -1,4 +1,4 @@
-
+//有ready表示初始化，引入js时应该放后面？
 $(document).ready(function(){
 //获得文本框对象
     var t = $("#book_amount");

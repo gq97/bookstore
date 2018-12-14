@@ -4,6 +4,8 @@ import cn.edu.ncu.bookstore.entity.Receive;
 import cn.edu.ncu.bookstore.entity.User;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Set;
 
 @Entity
 public class Orders {
@@ -21,14 +23,30 @@ public class Orders {
 
     private int orders_status;
 
+    //订单创建时间
+    private Timestamp orders_time;
+
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
+
+    //一个订单对应多个订单详情商品
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+    private Set<Orders_details> orders_details;
 
 
     public Orders(){
 
     }
+
+    public Orders(Receive receive, double orders_money, int orders_status, Timestamp orders_time, User user) {
+        this.receive = receive;
+        this.orders_money = orders_money;
+        this.orders_status = orders_status;
+        this.orders_time = orders_time;
+        this.user = user;
+    }
+
     public int getOrders_id() {
         return orders_id;
     }
@@ -69,4 +87,19 @@ public class Orders {
         this.user = user;
     }
 
+    public Timestamp getOrders_time() {
+        return orders_time;
+    }
+
+    public void setOrders_time(Timestamp orders_time) {
+        this.orders_time = orders_time;
+    }
+
+    public Set<Orders_details> getOrders_details() {
+        return orders_details;
+    }
+
+    public void setOrders_details(Set<Orders_details> orders_details) {
+        this.orders_details = orders_details;
+    }
 }

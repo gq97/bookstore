@@ -34,3 +34,9 @@
 ![](image/5.png)
 
 ![](image/6.png)
+> 引入超好看的layer.js组件
+
+![](image/7.png)
+
+> 成功提交订单
+![](image/8.png)

@@ -21,6 +21,7 @@ public class Cart {
     @JoinColumn(name = "book_id", referencedColumnName = "book_id")
     private Book book;
 
+    //购物车中某商品的状态， 1为正在结算，0为未勾选
     private Integer cart_status;
 
     private Integer book_amount;

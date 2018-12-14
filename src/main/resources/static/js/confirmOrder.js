@@ -10,13 +10,18 @@ $(document).ready(function(){
         if(newReceiveRadio.checked == true) {
             newAddress.style.display = "inline";
         } else {
+            var receive_id = document.getElementById("receive_id").value;
+            id = receive_id;
             newAddress.style.display = "none";
         }
     }
-})
-function usePreAddress() {
+});
+function usePreAddress(receive_id) {
     var newAddress = document.getElementById("newAddress");
+    var submitOrder = document.getElementById("submitOrder");
     newAddress.style.display = "none";
+    submitOrder.disabled = false;
+    id = receive_id;
 }
 
 function addReceive() {
@@ -24,6 +29,7 @@ function addReceive() {
     var receive_address = document.getElementById("receive_address").value;
     var receive_street = document.getElementById("receive_street").value;
     var receive_phone = document.getElementById("receive_phone").value;
+    //新增收货地址
     if(id == -1) {
         $.ajax({
             type: 'post',
@@ -34,12 +40,17 @@ function addReceive() {
                 receive_street: receive_street,
                 receive_phone: receive_phone
             },
+            dataType: "json",
             success: function (result) {
-                alert("提交成功");
-                window.location.reload();
             }
         });
+        layer.msg('新增成功', {
+            icon: 1,
+            time: 2000
+        });
+        window.location.reload();
     } else {
+        //更新收货地址
         $.ajax({
             type: 'post',
             url: '/updateReceive',
@@ -50,18 +61,25 @@ function addReceive() {
                 receive_street: receive_street,
                 receive_phone: receive_phone
             },
+            dataType: "json",
             success: function (result) {
-                alert("更新成功");
-                window.location.reload();
             }
         });
+        layer.msg('修改成功', {
+            icon: 1,
+            time: 2000
+        });
+        window.location.reload();
+
     }
 
 };
 
 function useNewAddress() {
     var newAddress = document.getElementById("newAddress");
+    var submitOrder = document.getElementById("submitOrder");
     newAddress.style.display = "inline";
+    submitOrder.disabled = true;
     id = -1;
 };
 
@@ -85,11 +103,21 @@ function updateReceive_default(receive_id) {
     $.ajax({
         url: '/updateReceive_default',
         data: {receive_id: receive_id},
-        success: function(result) {
-            if(result == true) {
-                alert("成功设为默认地址");
-                window.location.reload();
-            }
+        dataType: "json",
+        success: function (result) {
         }
-    })
+    });
+    layer.msg('修改成功', {
+        icon: 1,
+        time: 2000
+    });
+    window.location.reload();
 };
+
+function submitOrder() {
+    if(id == -1) {
+        var receive_id = document.getElementById("receive_id").value;
+        id = receive_id;
+    }
+    window.location.href = "/submitOrder?receive_id="+id;
+}

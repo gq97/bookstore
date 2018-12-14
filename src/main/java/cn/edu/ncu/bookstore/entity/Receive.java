@@ -1,7 +1,11 @@
 package cn.edu.ncu.bookstore.entity;
 
 
+
+import cn.edu.ncu.bookstore.entity.Orders.Orders;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Receive {
@@ -23,6 +27,10 @@ public class Receive {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
+
+    //一条收货信息对应多个订单
+    @OneToMany(mappedBy = "receive", cascade = CascadeType.ALL)
+    private Set<Orders> orders;
 
     public Receive(){}
 
@@ -89,5 +97,13 @@ public class Receive {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Set<Orders> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Orders> orders) {
+        this.orders = orders;
     }
 }

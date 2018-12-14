@@ -10,7 +10,9 @@
 <link rel="stylesheet" href="css/confirmOrder.css">
 <link rel="stylesheet" href="css/bootstrap.min.css">
 
-<script src="js/confirmOrder.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/layer.js"></script>
+
 
 <body>
 <div>
@@ -22,23 +24,20 @@
         <div>
             <div th:if="${receives ne null}">
                 <div th:each="receive : ${receives}">
+                    <input type="hidden" th:value="${receive.receive_name}" th:id="receive_name+${receive.receive_id}">
+                    <input type="hidden" th:value="${receive.receive_address}" th:id="receive_address+${receive.receive_id}">
+                    <input type="hidden" th:value="${receive.receive_street}" th:id="receive_street+${receive.receive_id}">
+                    <input type="hidden" th:value="${receive.receive_phone}" th:id="receive_phone+${receive.receive_id}">
                     <p th:if="${receive.receive_isDefault ne false}">
-                        <input  checked="checked" type="radio" name="radio" th:id="radio+${receive.receive_id}" onclick="usePreAddress()">
+                        <input  checked="checked" type="radio" name="radio" th:id="radio+${receive.receive_id}" th:onclick="'usePreAddress('+${receive.receive_id}+')'">
                         <span th:text="${receive.receive_name}+' '+${receive.receive_address}+' '+${receive.receive_street}+' '+${receive.receive_phone}"></span>
-                        <input type="hidden" th:value="${receive.receive_name}" th:id="receive_name+${receive.receive_id}">
-                        <input type="hidden" th:value="${receive.receive_address}" th:id="receive_address+${receive.receive_id}">
-                        <input type="hidden" th:value="${receive.receive_street}" th:id="receive_street+${receive.receive_id}">
-                        <input type="hidden" th:value="${receive.receive_phone}" th:id="receive_phone+${receive.receive_id}">
                         <a th:onclick="'updateReceive('+${receive.receive_id}+')'">&nbsp修改</a>&nbsp[默认]
+                        <input hidden="hidden" th:value="${receive.receive_id}" id="receive_id">
                     </p>
 
                     <p th:if="${receive.receive_isDefault eq false}">
-                        <input  type="radio" name="radio" th:id="radio+${receive.receive_id}" onclick="usePreAddress()">
+                        <input  type="radio" name="radio" th:id="radio+${receive.receive_id}"  th:onclick="'usePreAddress('+${receive.receive_id}+')'">
                         <span th:text="${receive.receive_name}+' '+${receive.receive_address}+' '+${receive.receive_street}+' '+${receive.receive_phone}"></span>
-                        <input type="hidden" th:value="${receive.receive_name}" th:id="receive_name+${receive.receive_id}">
-                        <input type="hidden" th:value="${receive.receive_address}" th:id="receive_address+${receive.receive_id}">
-                        <input type="hidden" th:value="${receive.receive_street}" th:id="receive_street+${receive.receive_id}">
-                        <input type="hidden" th:value="${receive.receive_phone}" th:id="receive_phone+${receive.receive_id}">
                         <a th:onclick="'updateReceive('+${receive.receive_id}+')'">&nbsp修改</a>
                         <a th:onclick="'updateReceive_default('+${receive.receive_id}+')'">&nbsp设为默认</a>
                     </p>
@@ -47,7 +46,7 @@
             <!-- class="jumbotron" -->
             <input style="margin: 10px 0;" type="radio" id="newReceiveRadio"  name="radio"onclick="useNewAddress()">&nbsp使用新的收货地址
             <div>
-                    <div id="newAddress" style="display: none">
+                <div id="newAddress" style="display: none">
                         <div class="receiveInfo" >
                             <label style="margin: 10px 0;">收货人：
                                 <input type="text" id="receive_name">
@@ -78,12 +77,12 @@
                         </div>
                         <input type="button" onclick="addReceive()" class="btn btn-default btn-danger" value="确认收货人信息">
                     </div>
+
             </div>
-
-
-
-
         </div>
+        <h3><b>订单总金额</b></h3>
+        <h4 th:text="'需支付 ￥'+${totalPrice}"></h4>
+        <input type="button" id="submitOrder" onclick="submitOrder()" class="btn btn-default btn-danger" value="提交订单">
     </div>
 
 </div>
@@ -91,7 +90,7 @@
 </body>
 <script src="js/city.js"></script>
 <script src="js/method02.js"></script>
-
+<script src="js/confirmOrder.js"></script>
 
 </html>
 
