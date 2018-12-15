@@ -60,7 +60,7 @@
                 <input th:id="hidden_price1+${cart.book.book_id}" name="priceList" hidden="hidden" th:value="${#numbers.formatDecimal(cart.book.book_price*cart.book.book_discount*0.1, 0, 2)}">
                 <div class="quantity1">
                     <input th:id="min+${cart.book.book_id}" th:onclick="'min1('+${cart.book.book_id}+')'" type="button" value="-" class="btn btn-xs btn-default" />
-                    <input th:id="book_amount+${cart.book.book_id}" name="book_amountList" type="text" value="1" th:value="${cart.book_amount}" th:onkeyup="'getPrice2('+${cart.book.book_id}+')'" style="height: 20px;width:30px;text-align: center"/>
+                    <input th:id="book_amount+${cart.book.book_id}" name="book_amountList" type="text"  th:value="${cart.book_amount}" th:onkeyup="'getPrice2('+${cart.book.book_id}+')'" style="height: 20px;width:30px;text-align: center"/>
                     <input th:id="add+${cart.book.book_id}" th:onclick="'add1('+${cart.book.book_id}+')'" type="button" value="+" class="btn btn-xs btn-default" />
                     <input type="hidden" th:id="storage+${cart.book.book_id}" th:value="${cart.book.book_amount}">
                 </div>

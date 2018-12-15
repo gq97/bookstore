@@ -4,12 +4,12 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <meta charset="UTF-8">
 <head>
-    <title>确认订单信息</title>
+    <title>我的订单</title>
 </head>
 
 <link rel="stylesheet" href="css/confirmOrder.css">
 <link rel="stylesheet" href="css/bootstrap.min.css">
-
+<link rel="stylesheet" href="css/cart.css">
 
 <body>
 <div>
@@ -26,14 +26,51 @@
             </div>
             <div class="col-sm-10  col-md-10 col-sm-offset-1 col-md-offset-1">
                 <div class="row">
-                    <ul class="nav nav-tabs list-group-diy" role="tablist">
-                        <li role="presentation" class="active list-group-item-diy"><a href="#unHandle" aria-controls="unHandle" role="tab" data-toggle="tab">待发货订单&nbsp;<span class="badge" id="unHandleCount">0</span></a></li>
-                        <li role="presentation" class="list-group-item-diy"><a href="#transport" aria-controls="transport" role="tab" data-toggle="tab">运输中订单&nbsp;<span class="badge" id="transportCount">0</span></a></li>
-                        <li role="presentation" class="list-group-item-diy"><a href="#receive" aria-controls="receive" role="tab" data-toggle="tab">已收货订单&nbsp;<span class="badge" id="receiveCount">0</span></a></li>
-                        <li role="presentation" class="list-group-item-diy"><a href="#all" aria-controls="all" role="tab" data-toggle="tab">全部订单&nbsp;<span class="badge" id="allCount">0</span></a></li>
+                    <ul class="nav nav-tabs list-group-diy" role="tablist" style="margin-bottom: 20px;">
+                        <li role="presentation" class="active list-group-item-diy"><a href="#unHandle" aria-controls="unHandle" role="tab" data-toggle="tab">待发货订单&nbsp;<span class="badge" id="unHandleCount" th:text="${unfilledOrders.size()}"></span></a></li>
+                        <li role="presentation" class="list-group-item-diy"><a href="#transport" aria-controls="transport" role="tab" data-toggle="tab">运输中订单&nbsp;<span class="badge" id="transportCount" th:text="${pendingOrders.size()}"></span></a></li>
+                        <li role="presentation" class="list-group-item-diy"><a href="#receive" aria-controls="receive" role="tab" data-toggle="tab">已收货订单&nbsp;<span class="badge" id="receiveCount" th:text="${receivedOrders.size()}"></span></a></li>
+                        <li role="presentation" class="list-group-item-diy"><a href="#all" aria-controls="all" role="tab" data-toggle="tab">全部订单&nbsp;<span class="badge" id="allCount" th:text="${allOrders.size()}"></span></a></li>
                     </ul>
 
-                    <div class="tab-content">
+
+                    <!-- 待发货 -->
+                    <div>
+                        <div th:if="${unfilledOrders.size()} ne 0" th:each="orders : ${unfilledOrders}">
+                            <div class="table-list" >
+                                <div class="table1">
+                                    <div class="id1" th:text="'订单号：'+${orders.orders_id}"></div>
+                                    <div class="product2">书籍</div>
+                                    <div class="price1">单价</div>
+                                    <div class="quantity1">数量</div>
+                                    <div class="operation1">金额</div>
+                                </div>
+
+                                <div class="trow" th:each="orders_details : ${orders.orders_details}">
+                                    <div class="product1">
+                                        <a th:href="@{/bookDetails(book_id=${orders_details.book.book_id})}">
+                                            <img class="cartImg" th:src="${orders_details.book.book_url}" >
+                                        </a>
+                                        <a th:href="@{/bookDetails(book_id=${orders_details.book.book_id})}" th:text="${orders_details.book.book_name}">
+                                        </a>
+                                    </div>
+                                    <div class="price1"  th:text="'￥'+${orders_details.book.book_realPrice}"></div>
+                                    <div class="quantity1" th:text="${orders_details.book_number}"></div>
+                                    <div class="price2"  th:text="'￥'+${orders_details.book_price}"></div>
+                                </div>
+
+                                <div class="table1">
+                                    <div class="time1" th:text="'订单创建时间：'+${orders.orders_time}"></div>
+                                    <div class="price3"></div>
+                                    <div class="totalPriceText" th:text="'总计：'"></div>
+                                    <div class="totalPrice" th:text="'￥'+${orders.orders_money}"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!--div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="unHandle">
                             <table class="table table-hover center" id="unHandleTable">
                             </table>
@@ -50,7 +87,8 @@
                             <table class="table table-hover center" id="allTable">
                             </table>
                         </div>
-                    </div>
+                    </div-->
+
                 </div>
             </div>
         </div>

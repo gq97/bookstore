@@ -20,10 +20,20 @@
     text-align: center;
     color: #666;
 }
+.id1 {
+    text-align: center;
+    border-right: 1px solid #fff;
+    width: 100px;
+}
 .product1 {
     border-right: 1px solid #fff;
     text-align: center;
     width: 435px;
+}
+.product2 {
+    border-right: 1px solid #fff;
+    text-align: center;
+    width: 335px;
 }
 .price1 {
     text-align: center;
@@ -100,6 +110,24 @@
     margin-bottom: 20px;
     background:white url(/img/bread-buy.jpg) no-repeat 0 0; height:33px;
 }
+.time1 {
+    width: 275px;
+    text-align: left;
+}
+
+.totalPriceText {
+    border-right: 1px solid #fff;
+    width: 127px;
+}
+.price3 {
+    border-right: 1px solid #fff;
+    width: 287px;
+}
+.totalPrice {
+    width: 127px;
+    text-align: center;
+    color: #CC0000;
+}
 
 .count {
     background: #F3F3F3;
@@ -128,7 +156,12 @@
     position: absolute;
     color: #CC0000;
 }
- 
+ .balance span{
+     right: 535px;
+     font-weight: bolder;
+     position: absolute;
+     text-align: right;
+ }
  .button-wrap {
      height: 80px;
      clear: both;

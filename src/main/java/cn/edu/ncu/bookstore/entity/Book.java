@@ -19,7 +19,8 @@ public class Book  {
     private Timestamp book_publishDate;
     private String book_introduce;
     private String book_category;
-    private double book_price;
+    private double book_price; //定价
+    private double book_realPrice; //折扣价，保留两位小数
     private int book_amount;
     private String book_url;
     private String book_ISBN;
@@ -53,7 +54,7 @@ public class Book  {
 
 
     public Book(){
-
+        this.book_realPrice = toDecimalFormat(this.book_price*this.book_discount*0.1);
     }
     public int getBook_id() {
         return book_id;
@@ -134,4 +135,19 @@ public class Book  {
     public void setBook_url(String book_url) {
         this.book_url = book_url;
     }
+
+
+    //四舍五入保留两位小数
+    public double toDecimalFormat(double number) {
+        return (int)(number * 100 + 0.5)*0.01;
+    }
+
+    public double getBook_realPrice() {
+        return book_realPrice;
+    }
+
+    public void setBook_realPrice(double book_realPrice) {
+        this.book_realPrice = book_realPrice;
+    }
+
 }

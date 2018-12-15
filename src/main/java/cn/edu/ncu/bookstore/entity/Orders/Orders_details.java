@@ -23,6 +23,9 @@ public class Orders_details {
 
     private int book_number;
 
+    //一件商品的价格
+    private double book_price;
+
     public Orders_details(){
     }
 
@@ -31,6 +34,7 @@ public class Orders_details {
         this.orders = orders;
         this.book = book;
         this.book_number = book_number;
+        this.book_price = book.getBook_realPrice() * book_number;
     }
 
     public OrdersPK getOrdersPK() {
@@ -64,4 +68,13 @@ public class Orders_details {
     public void setBook_number(int book_number) {
         this.book_number = book_number;
     }
+
+    public double getBook_price() {
+        return book_price;
+    }
+
+    public void setBook_price(double book_price) {
+        this.book_price = book_price;
+    }
+
 }

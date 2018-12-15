@@ -322,6 +322,34 @@ public class MainController {
 
     @RequestMapping("/order")
     public String order(Model model) {
+        User user = getUser();
+        List<Orders> allOrders = ordersRepository.findOrdersByUser(user);
+        List<Orders> unfilledOrders = new ArrayList<Orders>();
+        List<Orders> pendingOrders = new ArrayList<Orders>();
+        List<Orders> receivedOrders = new ArrayList<Orders>();
+        for(int i = 0; i<allOrders.size(); i++) {
+            allOrders.get(i).setOrders_details(orders_detailsRepository.findOrders_detailsByOrders(allOrders.get(i)));
+            switch (allOrders.get(i).getOrders_status()) {
+                case 1: {
+                    unfilledOrders.add(allOrders.get(i));
+                    break;
+                }
+                case 2: {
+                    pendingOrders.add(allOrders.get(i));
+                    break;
+                }
+                case 3: {
+                    receivedOrders.add(allOrders.get(i));
+                    break;
+                }
+                default: System.out.println("Error");
+            }
+        }
+        model.addAttribute("allOrders", allOrders);
+        model.addAttribute("unfilledOrders", unfilledOrders);
+        model.addAttribute("pendingOrders", pendingOrders);
+        model.addAttribute("receivedOrders", receivedOrders);
+
         return "order";
     }
 
