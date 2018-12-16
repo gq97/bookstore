@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<meta charset="UTF-8">
+<head>
+    <title>我的订单</title>
+</head>
+
+<link rel="stylesheet" href="css/confirmOrder.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/cart.css">
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/layer.js"></script>
+
+<body>
+<div>
+    <div th:replace="~{common/header::body}"></div>
+
+    <div class="layout2" >
+
+        <!-- 中间内容 -->
+        <div class="jumbotron text-center">
+            <h2>欢迎来到订单详情页</h2>
+        </div>
+
+        <h3><b>收货信息</b></h3>
+        <h4 th:text="${orders.receive.receive_name}+' '+${orders.receive.receive_phone}"></h4>
+        <h4 th:text="${orders.receive.receive_address}+' '+${orders.receive.receive_street}"></h4>
+
+
+        <div class="table-list" >
+            <div class="table1">
+                <div class="id1" th:text="'订单号：'+${orders.orders_id}"></div>
+                <div class="product2">书籍</div>
+                <div class="price1">单价</div>
+                <div class="quantity1">数量</div>
+                <div class="operation1">金额</div>
+            </div>
+
+            <div class="trow" th:each="orders_details : ${orders.orders_details}">
+                <div class="product1">
+                    <a th:href="@{/bookDetails(book_id=${orders_details.book.book_id})}">
+                        <img class="cartImg" th:src="${orders_details.book.book_url}" >
+                    </a>
+                    <a th:href="@{/bookDetails(book_id=${orders_details.book.book_id})}" th:text="${orders_details.book.book_name}">
+                    </a>
+                </div>
+                <div class="price1"  th:text="'￥'+${orders_details.book.book_realPrice}"></div>
+                <div class="quantity1" th:text="${orders_details.book_number}"></div>
+                <div class="price2"  th:text="'￥'+${orders_details.book_price}"></div>
+            </div>
+
+            <div class="table1">
+                <div class="time1" th:text="'订单创建时间：'+${orders.orders_time}"></div>
+                <div class="price4"></div>
+                <div class="totalPriceText" th:text="'总计：'"></div>
+                <div class="totalPriceText" th:text="'￥'+${orders.orders_money}"></div>
+                <div class="totalPrice">
+                    <a th:if="${orders.orders_status eq 1}">待发货</a>
+                    <a th:onclick="'confirmReceive('+${orders.orders_id}+')'" th:if="${orders.orders_status eq 2}">确认收货</a>
+                    <a href="#" th:if="${orders.orders_status eq 3}">去评价</a>
+                    <a th:onclick="'('+${orders.orders_id}+')'" th:if="${orders.orders_status eq 4}">查看评价</a>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>
+
+</body>
+
+</html>
+

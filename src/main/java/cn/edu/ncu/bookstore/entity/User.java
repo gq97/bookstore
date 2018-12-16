@@ -34,6 +34,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Orders> orders;
 
+    //一对多，一个用户有多条评论
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Comment> comment;
+
     public User() {//无参默认构造器
     }
 

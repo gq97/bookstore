@@ -328,7 +328,7 @@ public class MainController {
         List<Orders> pendingOrders = new ArrayList<Orders>();
         List<Orders> receivedOrders = new ArrayList<Orders>();
         for(int i = 0; i<allOrders.size(); i++) {
-            allOrders.get(i).setOrders_details(orders_detailsRepository.findOrders_detailsByOrders(allOrders.get(i)));
+            //allOrders.get(i).setOrders_details(orders_detailsRepository.findOrders_detailsByOrders(allOrders.get(i)));
             switch (allOrders.get(i).getOrders_status()) {
                 case 1: {
                     unfilledOrders.add(allOrders.get(i));
@@ -351,6 +351,23 @@ public class MainController {
         model.addAttribute("receivedOrders", receivedOrders);
 
         return "order";
+    }
+
+    //订单详情
+    @RequestMapping(value = "/orders_details")
+    public String getOrders_details(Model model, Integer orders_id) {
+        Orders orders = ordersRepository.findById(orders_id).get();
+        model.addAttribute("orders", orders);
+        return "order_details";
+    }
+
+    //确认收货
+    @RequestMapping(value = "/confirmReceived")
+    public String confirmReceived(Model model, Integer orders_id) {
+        Orders orders = ordersRepository.findById(orders_id).get();
+        orders.setOrders_status(3);
+        ordersRepository.save(orders);
+        return "redirect: json/true.json";
     }
 
 }

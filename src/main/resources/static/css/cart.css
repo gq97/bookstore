@@ -2,6 +2,9 @@
     margin:50px auto;
     width: 990px;
 }
+.layout2 {
+    margin:50px 250px;
+}
 .table-list {
     border: 1px solid #ddd;
     background: #FFFEFD;
@@ -52,6 +55,9 @@
     width: 127px;
 }
 
+.operation2 {
+    width: 127px;
+}
 .shop {
     color: #666;
     border-bottom: 1px dashed #ddd;
@@ -122,6 +128,10 @@
 .price3 {
     border-right: 1px solid #fff;
     width: 287px;
+}
+.price4 {
+    border-right: 1px solid #fff;
+    width: 160px;
 }
 .totalPrice {
     width: 127px;

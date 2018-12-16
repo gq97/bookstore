@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface OrdersRepository extends CrudRepository<Orders, Integer> {
 
-    //根据user查询用户所有订单
-    @Query("select o from Orders o where o.user= ?1")
+    //查询用户所有订单，根据订单创建时间降序排序
+    @Query("select o from Orders o where o.user= ?1 order by o.orders_time desc")
     List<Orders> findOrdersByUser(User user);
 
 

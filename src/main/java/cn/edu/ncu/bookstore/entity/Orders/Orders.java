@@ -21,7 +21,7 @@ public class Orders {
 
     private double orders_money;
 
-    //订单状态 1-待发货 2-待收货 3-待评价
+    //订单状态 1-待发货 2-待收货 3-待评价 4-已评价
     private int orders_status;
 
     //订单创建时间
