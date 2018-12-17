@@ -43,6 +43,9 @@ public class MainController {
     @Autowired
     private Orders_detailsRepository orders_detailsRepository;
 
+    @Autowired
+    private CommentRepository commentRepository;
+
     public boolean isExistUser(){
         MyUserDetails myUserDetails = (MyUserDetails)SecurityContextHolder
                 .getContext().getAuthentication().getPrincipal();
@@ -366,6 +369,38 @@ public class MainController {
     public String confirmReceived(Model model, Integer orders_id) {
         Orders orders = ordersRepository.findById(orders_id).get();
         orders.setOrders_status(3);
+        ordersRepository.save(orders);
+        return "redirect: json/true.json";
+    }
+
+    //进入评价页
+    @RequestMapping(value = "/comment")
+    public String comment(Model model, Integer orders_id) {
+        Orders orders = ordersRepository.findById(orders_id).get();
+        Set<Orders_details> orders_details = orders.getOrders_details();//orders_detailsRepository.findOrders_detailsByOrders(orders);
+        List<Book> books = new ArrayList<Book>();
+        for(Orders_details orders_detail : orders_details) {
+            books.add(orders_detail.getBook());
+        }
+        model.addAttribute("books", books);
+        model.addAttribute("orders_id", orders_id);
+        return "comment";
+    }
+
+    //对某件商品进行评论
+    @RequestMapping(value = "/submitComment")
+    public String submitComment(Model model,Integer orders_id,  Integer[] book_ids, String[] comment_texts, Integer[] scores ){
+        int len = book_ids.length;
+        User user = getUser();
+        for(int i = 0; i<len; i++) {
+            Book book = bookRepository.findById(book_ids[i]).get();
+            Timestamp comment_time = getCurrentTime();
+            Comment comment = new Comment(book, user, comment_texts[i], comment_time, scores[i]);
+            commentRepository.save(comment);
+        }
+        Orders orders = ordersRepository.findById(orders_id).get();
+        //将订单状态设为已评价
+        orders.setOrders_status(4);
         ordersRepository.save(orders);
         return "redirect: json/true.json";
     }

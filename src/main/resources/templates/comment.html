@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/bookDetails.css">
+<link rel="stylesheet" href="css/confirmOrder.css">
+<link rel="stylesheet" href="css/index.css">
+<link rel="stylesheet" href="css/comment.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<script src="/js/jquery.min.js"></script>
+<script src="/js/layer.js"></script>
+<script src="js/bookDetails.js"></script>
+
+<body>
+
+<div>
+
+    <div th:replace="~{common/header::body}"></div>
+
+
+    <div class="layout">
+
+        <input id="orders_id" hidden="hidden" th:value="${orders_id}">
+        <div th:each="book : ${books}">
+            <!-- 左侧书籍展示 -->
+            <div class="img">
+                <a target="_blank" href="#">
+                    <img th:src="@{${book.book_url}}" alt="图片文本描述" width="300" height="300">
+                </a>
+            </div>
+
+            <!-- 右侧文字说明 -->
+            <div class="book-right">
+                <h3><b th:text="${book.book_name}"></b></h3>
+                <p th:text="''+${book.book_introduce}"></p>
+
+                <div class="myMargin">
+                    定价：
+                    <span  style="text-decoration:line-through;" th:text="${book.book_price}"></span>
+                </div>
+                <div class="myMargin">
+                    现价：
+                    <span class="price" th:text="${#numbers.formatDecimal(book.book_price*book.book_discount*0.1, 0, 2)}+'（'+${book.book_discount}+'折）'"></span>
+                </div>
+
+
+                <h5 class="myMargin" th:text="'作者：'+${book.book_author}"></h5>
+                <div class="myMargin">
+                    分类：
+                    <a th:href="@{/listBooks(categoryName=${book.book_category})}"  th:text="${book.book_category}" th:align="center" name="category" id="category"></a>
+                </div>
+
+                <h5 class="myMargin" th:text="'库存：'+${book.book_amount}"></h5>
+                <input type="hidden" id="storage"  th:value="${book.book_amount}">
+
+
+            </div>
+
+            <!-- 评论 -->
+            <div class="comment-main">
+                <div class="comment-header"><h4><b>其他买家，需要您宝贵的建议哦！</b></h4></div>
+                <div class="comment-text">
+                    <div class="input-group" >
+                        <span class="input-group-addon" style="width:50px; height:200px">评价商品</span>
+                        <input name="comment_texts" th:id="'comment'+${book.book_id}" type="text" class="form-control"style="width:500px;height:200px">
+                    </div>
+                    <br>
+                    <div>
+                        <input name="book_ids" hidden="hidden" th:value="${book.book_id}">
+                        <label>卖家服务&nbsp</label>
+                        <img th:name="'star'+${book.book_id}" th:onclick="'star(1'+${book.book_id}+')'" src="img/starcpy.png" >
+                        <img th:name="'star'+${book.book_id}" th:onclick="'star(2'+${book.book_id}+')'" src="img/starcpy.png" >
+                        <img th:name="'star'+${book.book_id}" th:onclick="'star(3'+${book.book_id}+')'" src="img/starcpy.png" >
+                        <img th:name="'star'+${book.book_id}" th:onclick="'star(4'+${book.book_id}+')'" src="img/starcpy.png" >
+                        <img th:name="'star'+${book.book_id}" th:onclick="'star(5'+${book.book_id}+')'" src="img/starcpy.png" >
+                        <label  name="scores" th:id="'lab'+${book.book_id}">0</label>&nbsp分
+                        <input hidden="hidden">
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <button onclick="submitComment()" class="btn btn-danger btn-default" style="margin-left: 600px;margin-top: 20px;">提交评价</button>
+
+    </div>
+
+</div>
+</body>
+<script>
+    function star(number) {
+        var id = number.toString();
+        var score = id.substring(0, 1);
+        book_id = id.substring(1);
+        var imgs = document.getElementsByName("star"+book_id);
+        for(var i = 0; i<score; i++) {
+            imgs[i].src="img/star.png";
+        }
+        for(var i=score; i<imgs.length; i++){
+            imgs[i].src="img/starcpy.png";
+        }
+        document.getElementById("lab"+book_id).innerText=score;
+    }
+    function submitComment() {
+        var book_ids = [];
+        var comment_texts = [];
+        var scores = [];
+        var book_idsName = document.getElementsByName("book_ids");
+        var comment_textsName = document.getElementsByName("comment_texts");
+        for(var i = 0; i<book_idsName.length; i++) {
+            book_ids.push(parseInt(book_idsName[i].value));
+            comment_texts.push(comment_textsName[i].value);
+            var score = document.getElementById("lab"+book_ids[i]).innerText;
+            scores.push(parseInt(score));
+        }
+        var orders_id = document.getElementById("orders_id").value;
+        $.ajax({
+            url: "/submitComment",
+            async: false,
+            cache: false,
+            traditional: true,
+            type: 'POST',
+            data: {orders_id: orders_id, comment_texts: comment_texts, scores: scores ,book_ids: book_ids},
+            success: function(result) {
+                
+            }, error: function () {
+                
+            }
+        })
+        layer.msg('评价成功', {
+            icon: 1,
+            time: 2000
+        });
+        window.location.href = "/order";
+    }
+</script>
+</html>
+

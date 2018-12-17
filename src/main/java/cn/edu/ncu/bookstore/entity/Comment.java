@@ -27,6 +27,14 @@ public class Comment {
 
     public Comment(){}
 
+    public Comment(Book book, User user, String comment_text, Timestamp comment_time, int comment_star) {
+        this.book = book;
+        this.user = user;
+        this.comment_text = comment_text;
+        this.comment_time = comment_time;
+        this.comment_star = comment_star;
+    }
+
     public int getComment_id() {
         return comment_id;
     }

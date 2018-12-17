@@ -1,0 +1,21 @@
+.comment-main {
+    background-color: #f6f6f6;
+    padding-bottom: 25px;
+    z-index: 100;
+}
+
+.comment-main .comment-header {
+    position: relative;
+    padding: 25px 0 30px 5%;
+}
+
+.comment-text {
+    text-align: left;
+    display: block;
+    margin-bottom: 30px;
+    padding-left: 40px;
+}
+
+.comment-star {
+    padding-left: 40px;
+}

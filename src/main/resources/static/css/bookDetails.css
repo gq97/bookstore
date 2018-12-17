@@ -5,10 +5,11 @@
 .book-right {
     margin: 0px 20px 0px 20px; //上右下左
     width: 500px;
+    height: 380px;
 }
 
 .img {
-    margin: 0px 20px 0px 20px;
+    margin: 0px 20px 0px 0px;
     border: 2px solid #ccc;
     padding: 10px 10px 10px 10px;
     float: left;

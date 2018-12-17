@@ -167,7 +167,7 @@
                                     <div class="totalPriceText" th:text="'总计：'"></div>
                                     <div class="totalPriceText" th:text="'￥'+${orders.orders_money}"></div>
                                     <div class="totalPrice">
-                                        <a href="#">去评价</a>
+                                        <a th:href="@{/comment(orders_id=${orders.orders_id})}">去评价</a>
                                     </div>
                                 </div>
                             </div>
@@ -218,8 +218,8 @@
                                     <div class="totalPrice">
                                         <a th:if="${orders.orders_status eq 1}">待发货</a>
                                         <a th:onclick="'confirmReceive('+${orders.orders_id}+')'" th:if="${orders.orders_status eq 2}">确认收货</a>
-                                        <a href="#" th:if="${orders.orders_status eq 3}">去评价</a>
-                                        <a th:onclick="'('+${orders.orders_id}+')'" th:if="${orders.orders_status eq 4}">查看评价</a>
+                                        <a th:href="@{/comment(orders_id=${orders.orders_id})}" th:if="${orders.orders_status eq 3}">去评价</a>
+                                        <a th:if="${orders.orders_status eq 4}">已评价</a>
                                     </div>
                                 </div>
                             </div>
