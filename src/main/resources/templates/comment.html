@@ -3,7 +3,6 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<meta charset="UTF-8">
 <link rel="stylesheet" href="css/bookDetails.css">
 <link rel="stylesheet" href="css/confirmOrder.css">
 <link rel="stylesheet" href="css/index.css">
@@ -13,8 +12,12 @@
 <script src="/js/layer.js"></script>
 <script src="js/bookDetails.js"></script>
 
-<body>
+<head>
+    <!--meta http-equiv="Content-Type" content="text/html;  charset=utf-8" /-->
 
+</head>
+<body>
+<meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8" />
 <div>
 
     <div th:replace="~{common/header::body}"></div>
@@ -25,7 +28,7 @@
         <input id="orders_id" hidden="hidden" th:value="${orders_id}">
         <div th:each="book : ${books}">
             <!-- 左侧书籍展示 -->
-            <div class="img">
+            <div class="commentImg">
                 <a target="_blank" href="#">
                     <img th:src="@{${book.book_url}}" alt="图片文本描述" width="300" height="300">
                 </a>
@@ -68,6 +71,14 @@
                     </div>
                     <br>
                     <div>
+                        <h5>图片评论：</h5>
+                        <input th:id="'comment_image'+${book.book_id}" hidden="hidden">
+                        <form  th:id="'imageForm'+${book.book_id}" action="/postCommentImage" method="POST" enctype="multipart/form-data">
+                            <img src="" th:id="'showImage'+${book.book_id}" name="showImage" style="margin: 10px 0px;display: none;height: 200px; width: 200px;">
+                            <input type="file" th:id="'image'+${book.book_id}" name="image" th:onchange="'postCommentImage('+${book.book_id}+')'"/><br/>
+                        </form>
+                    </div>
+                    <div>
                         <input name="book_ids" hidden="hidden" th:value="${book.book_id}">
                         <label>卖家服务&nbsp</label>
                         <img th:name="'star'+${book.book_id}" th:onclick="'star(1'+${book.book_id}+')'" src="img/starcpy.png" >
@@ -76,7 +87,6 @@
                         <img th:name="'star'+${book.book_id}" th:onclick="'star(4'+${book.book_id}+')'" src="img/starcpy.png" >
                         <img th:name="'star'+${book.book_id}" th:onclick="'star(5'+${book.book_id}+')'" src="img/starcpy.png" >
                         <label  name="scores" th:id="'lab'+${book.book_id}">0</label>&nbsp分
-                        <input hidden="hidden">
                     </div>
 
                 </div>
@@ -90,23 +100,64 @@
 </div>
 </body>
 <script>
+    //点亮评分星星
     function star(number) {
         var id = number.toString();
-        var score = id.substring(0, 1);
-        book_id = id.substring(1);
-        var imgs = document.getElementsByName("star"+book_id);
+        var score = parseInt(id.substring(0, 1));
+        book_id = parseInt(id.substring(1));
+        var images = document.getElementsByName("star"+book_id);
         for(var i = 0; i<score; i++) {
-            imgs[i].src="img/star.png";
+            images[i].src="img/star.png";
         }
-        for(var i=score; i<imgs.length; i++){
-            imgs[i].src="img/starcpy.png";
+        for(var i=score; i<images.length; i++){
+            images[i].src="img/starcpy.png";
         }
         document.getElementById("lab"+book_id).innerText=score;
     }
+
+    //ajax上传图片
+    function postCommentImage(book_id) {
+        //本地回显
+        var image = document.getElementById("image"+book_id);
+        var showImage = document.getElementById("showImage"+book_id);
+        var src = window.URL.createObjectURL(image.files[0]);
+        showImage.src = src;
+        showImage.style.display = "inline";
+
+        var form = document.getElementById("imageForm"+book_id);
+        var formData = new FormData(form);
+        var Result = "false";
+        $.ajax({
+            url: '/postCommentImage',
+            data: formData,
+            type: 'POST',
+            cache: false,
+            async: false,
+            contentType: false,
+            processData: false,
+            success: function(result) {
+                Result = result;
+            }
+        })
+        if(Result == "false") {
+            layer.msg('上传失败', {
+                icon: 1,
+                time: 2000
+            });
+        } else {
+            layer.msg('上传成功', {
+                icon: 1,
+                time: 2000
+            });
+            document.getElementById("comment_image"+book_id).innerHTML=Result;
+        }
+    }
+
     function submitComment() {
         var book_ids = [];
         var comment_texts = [];
         var scores = [];
+        var comment_image = [];
         var book_idsName = document.getElementsByName("book_ids");
         var comment_textsName = document.getElementsByName("comment_texts");
         for(var i = 0; i<book_idsName.length; i++) {
@@ -114,6 +165,7 @@
             comment_texts.push(comment_textsName[i].value);
             var score = document.getElementById("lab"+book_ids[i]).innerText;
             scores.push(parseInt(score));
+            comment_image.push(document.getElementById("comment_image"+book_ids[i]).innerText);
         }
         var orders_id = document.getElementById("orders_id").value;
         $.ajax({
@@ -122,7 +174,7 @@
             cache: false,
             traditional: true,
             type: 'POST',
-            data: {orders_id: orders_id, comment_texts: comment_texts, scores: scores ,book_ids: book_ids},
+            data: {orders_id: orders_id, comment_texts: comment_texts, scores: scores ,book_ids: book_ids, comment_image: comment_image},
             success: function(result) {
                 
             }, error: function () {

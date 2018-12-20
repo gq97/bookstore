@@ -9,7 +9,7 @@
 }
 
 .img {
-    margin: 0px 20px 0px 0px;
+    margin: 0px 20px 0px 20px;
     border: 2px solid #ccc;
     padding: 10px 10px 10px 10px;
     float: left;
@@ -21,6 +21,14 @@
     border: 1px solid #777;
 }
 
+.commentImg {
+    margin: 0px 20px 0px 20px;
+    border: 2px solid #ccc;
+    padding: 10px 10px 10px 10px;
+    float: left;
+//width: 310px;
+    height: auto;
+}
 
 .books div.desc {
     padding: 15px;
@@ -47,26 +55,46 @@
 
 .box {
     margin: 70px 200px 0px 450px;
-    width: 800px;overflow: hidden;
+    width: 800px;;
 }
 
-.box p{margin: 0;}
-.box h2{margin: 0;font-size:100%;}
-.box ul{margin: 0;padding: 0;list-style: none;}
-.box input{margin: 0;width: 0;}
-.box a{text-decoration: none;color:inherit;}
-.navI{float: left;width: 50%;box-sizing: border-box;}
-.navI-tit{display:block;line-height: 40px;text-align: center;cursor: pointer;border-left: 1px solid #cecece;border-bottom: 1px solid #cecece;}
-.navI-txt{position:relative;width: 800px;height:800px;text-indent:2em;line-height: 2;background:#fff;}
-.ml1{margin-left: -100%;}
-.ml2{margin-left: -200%;}
-/*重点代码*/
-.navI-radio{display:none;}
-.navI-radio:checked + .navI-tit{background:#fff;border-bottom:none;}
-.navI-radio:checked ~ .navI-txt{z-index:1;}
+.box-comment {
+    margin: 10px 0px;
+    padding: 10px 10px;
+    border: 1px solid #ddd;
+    width: 800px;
+}
 
+.box-header {
+    width: 800px;
+    padding: 10px 10px;
+}
+
+.box-text {
+    width: 800px;
+    padding: 10px 10px;
+}
+.user2 {
+    width: 33%;
+    float: left;
+}
+.star2 {
+    width: 33%;
+    float: left;
+}
+.time2 {
+    width: auto;
+}
+
+.image2 {
+    width: 100px;
+    height: 100px;
+}
 .introduce {
     width: 50%;
     float: left;
+}
+.introduce2 {
+    margin: 20px 20px;
 }
 

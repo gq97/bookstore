@@ -80,68 +80,102 @@
     <!-- end for book -->
 
     <div class="box">
-        <ul class="nav">
-            <li class="navI">
-                <input class="navI-radio" name="nav" type="radio" id="kc" checked>
-                <label class="navI-tit" for="kc">商品详情</label>
-                <div class="navI-txt">
-                    <ul class="introduce">
-                        <li th:text="'作&nbsp者：'+${book.book_author}"></li>
-                        <li th:text="'出版社：'+${book.book_publisher}"></li>
-                    </ul>
-                    <ul class="introduce">
-                        <li th:text="'出版时间：'+${book.book_publishDate}"></li>
-                        <li th:text="'ISBN：'+${book.book_ISBN}"></li>
-                    </ul>
-                    <br>
-                    <!--分割线-->
-                    <hr style="border:1px dotted #C0C0C0" />
-                    <h4>目录：</h4>
-                    <p th:text="${book.book_content}"></p>
-                </div>
-
-            </li>
-            <li class="navI">
-                <input class="navI-radio" name="nav" type="radio" id="xx">
-                <label class="navI-tit" for="xx">商品评价</label>
-                <div class="navI-txt ml1">
-                    <p>暂无评价</p>
-                </div>
-
-            </li>
+        <ul class="nav nav-tabs list-group-diy" role="tablist" style="margin-bottom: 20px;">
+            <li style="text-align: center;width:50%;" role="presentation" class="active list-group-item-diy"><a style="color: #000;" onclick="showNavI()" aria-controls="unHandle" role="tab" data-toggle="tab">商品详情</span></a></li>
+            <li style="text-align: center;width:50%;" class="list-group-item-diy"><a style="color: #000;" onclick="showNavII()" aria-controls="transport" role="tab" data-toggle="tab">商品评价&nbsp<span class="badge"  th:text="${comments.size()}"></span></a></li>
         </ul>
-    </div>
+        <div id="navI" style="display: inline;">
+            <ul class="introduce">
+                <li th:text="'作&nbsp者：'+${book.book_author}"></li>
+                <li th:text="'出版社：'+${book.book_publisher}"></li>
+            </ul>
+            <ul class="introduce">
+                <li th:text="'出版时间：'+${book.book_publishDate}"></li>
+                <li th:text="'ISBN：'+${book.book_ISBN}"></li>
+            </ul>
+            <!--分割线-->
+            <br>
+            <hr />
+            <div class="introduce2">
+                <h4><b>目录：</b></h4>
+                <p th:text="${book.book_content}"></p>
+            </div>
+
+        </div>
+        <div id="navII" style="display: none" >
+            <div th:each="comment : ${comments}">
+                <div class="box-comment">
+                    <div class="box-header">
+                        <div class="user2" th:text="'用户：'+${comment.user.user_id}"></div>
+                        <div class="star2">
+                            <span>评分：</span>
+                            <img th:if="${comment.comment_star} ge 1" th:name="'star'+${book.book_id}" src="img/star2.png" >
+                            <img th:if="${comment.comment_star} lt 1" th:name="'star'+${book.book_id}" src="img/starCopy2.png" >
+                            <img th:if="${comment.comment_star} ge 2" th:name="'star'+${book.book_id}" src="img/star2.png" >
+                            <img th:if="${comment.comment_star} lt 2" th:name="'star'+${book.book_id}" src="img/starCopy2.png" >
+                            <img th:if="${comment.comment_star} ge 3" th:name="'star'+${book.book_id}" src="img/star2.png" >
+                            <img th:if="${comment.comment_star} lt 3" th:name="'star'+${book.book_id}" src="img/starCopy2.png" >
+                            <img th:if="${comment.comment_star} ge 4" th:name="'star'+${book.book_id}" src="img/star2.png" >
+                            <img th:if="${comment.comment_star} lt 4" th:name="'star'+${book.book_id}" src="img/starCopy2.png" >
+                            <img th:if="${comment.comment_star} ge 5" th:name="'star'+${book.book_id}" src="img/star2.png" >
+                            <img th:if="${comment.comment_star} lt 5" th:name="'star'+${book.book_id}" src="img/starCopy2.png" >
+                        </div>
+                        <div class="time2" th:text="'发表时间：'+${comment.comment_time}"></div>
+                    </div>
+                    <hr>
+                    <div class="box-text" th:text="${comment.comment_text}"></div>
+                    <div class="box-text">
+                        <img class="image2"th:src="${comment.comment_image}" >
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+</div>
 
 </div>
 </body>
 <script>
-    var book_amount = $("#book_amount").val();
-    var book_id = $("#book_id").val();
-    var data = "book_id="+book_id+"&book_amount="+book_amount;
-    function addToCart() {
-        var addResult = "";
-        $.ajax({
-            type: "POST",
-            url: "[[@{/addToCart}]]",
-            data: data,
-            dataType: "json",
-            async: false,
-            success: function(result) {
-                if(result == true) {
-                    addResult = "true";
-                }
-            }
-        });
-        if(addResult == "true") {
-            layer.confirm('前往购物车？', {icon: 1, title:'添加成功',btn:['前往购物车','继续浏览']},
-                function(){
-                    window.location.href = "/cart";
-                },
-                function(index){
-                    layer.close(index);}
-            );
+var book_amount = $("#book_amount").val();
+var book_id = $("#book_id").val();
+var data = "book_id="+book_id+"&book_amount="+book_amount;
+var navI = document.getElementById("navI");
+var navII = document.getElementById("navII");
+function showNavI() {
+    navI.style.display = "inline";
+    navII.style.display = "none";
+}
+function showNavII() {
+    navII.style.display = "inline";
+    navI.style.display = "none";
+}
+
+function addToCart() {
+var addResult = "";
+$.ajax({
+    type: "POST",
+    url: "[[@{/addToCart}]]",
+    data: data,
+    dataType: "json",
+    async: false,
+    success: function(result) {
+        if(result == true) {
+            addResult = "true";
         }
     }
+});
+if(addResult == "true") {
+    layer.confirm('前往购物车？', {icon: 1, title:'添加成功',btn:['前往购物车','继续浏览']},
+        function(){
+            window.location.href = "/cart";
+        },
+        function(index){
+            layer.close(index);}
+    );
+}
+}
 
 </script>
 </html>

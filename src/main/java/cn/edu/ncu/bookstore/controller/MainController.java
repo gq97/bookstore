@@ -13,8 +13,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sun.misc.Request;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -147,6 +152,8 @@ public class MainController {
     @RequestMapping("/bookDetails")
     public String listBook(Model model, Integer book_id){
         Book book = bookRepository.findById(book_id).get();
+        List<Comment> comments = commentRepository.findCommentsByBook(book);
+        model.addAttribute("comments", comments);
         model.addAttribute("book", book);
         return "bookDetails";
     }
@@ -345,6 +352,9 @@ public class MainController {
                     receivedOrders.add(allOrders.get(i));
                     break;
                 }
+                case 4: {
+                    break;
+                }
                 default: System.out.println("Error");
             }
         }
@@ -389,13 +399,13 @@ public class MainController {
 
     //对某件商品进行评论
     @RequestMapping(value = "/submitComment")
-    public String submitComment(Model model,Integer orders_id,  Integer[] book_ids, String[] comment_texts, Integer[] scores ){
+    public String submitComment(Model model,Integer orders_id,  Integer[] book_ids, String[] comment_texts, Integer[] scores, String[] comment_image){
         int len = book_ids.length;
         User user = getUser();
         for(int i = 0; i<len; i++) {
             Book book = bookRepository.findById(book_ids[i]).get();
             Timestamp comment_time = getCurrentTime();
-            Comment comment = new Comment(book, user, comment_texts[i], comment_time, scores[i]);
+            Comment comment = new Comment(book, user, comment_texts[i], comment_time, scores[i], comment_image[i]);
             commentRepository.save(comment);
         }
         Orders orders = ordersRepository.findById(orders_id).get();
@@ -404,5 +414,8 @@ public class MainController {
         ordersRepository.save(orders);
         return "redirect: json/true.json";
     }
+
+
+
 
 }

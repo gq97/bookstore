@@ -25,14 +25,18 @@ public class Comment {
     //评分等级
     private int comment_star;
 
+    //评论图url
+    private String comment_image;
+
     public Comment(){}
 
-    public Comment(Book book, User user, String comment_text, Timestamp comment_time, int comment_star) {
+    public Comment(Book book, User user, String comment_text, Timestamp comment_time, int comment_star, String comment_image) {
         this.book = book;
         this.user = user;
         this.comment_text = comment_text;
         this.comment_time = comment_time;
         this.comment_star = comment_star;
+        this.comment_image = comment_image;
     }
 
     public int getComment_id() {
@@ -81,5 +85,13 @@ public class Comment {
 
     public void setComment_star(int comment_star) {
         this.comment_star = comment_star;
+    }
+
+    public String getComment_image() {
+        return comment_image;
+    }
+
+    public void setComment_image(String comment_image) {
+        this.comment_image = comment_image;
     }
 }
