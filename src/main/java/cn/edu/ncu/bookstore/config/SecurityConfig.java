@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers("/css/**", "/js/**", "/fonts/**", "/index", "/", "/img/**", "/json/**",
-                        "/templates/**", "/html/**", "/listBooks", "/listAll", "/bookDetails", "/search")
+                        "/templates/**", "/register", "/listBooks", "/listAll", "/bookDetails", "/search")
                 .permitAll()
                 .antMatchers("user/**")
                 .hasRole("ADMIN")
@@ -41,11 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .formLogin() //基于form表单登录验证
                     .loginPage("/login")
-                    //.loginProcessingUrl("/login")
-                      //  .successForwardUrl("/index.html")
-                      .failureUrl("/login-error")
-                        .successForwardUrl("/login-success")
-                       // .defaultSuccessUrl("/index")
+                    .failureUrl("/login-error")
+                    .successForwardUrl("/login-success")
                     .permitAll()
                 .and()
                     .logout().logoutSuccessUrl("/index")

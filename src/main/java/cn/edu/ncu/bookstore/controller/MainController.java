@@ -101,13 +101,6 @@ public class MainController {
         return "login";
     }
 
-    @GetMapping("/login-error")
-    public String loginError(Model model){
-        model.addAttribute("loginError", true);
-        model.addAttribute("errorMsg", "登录失败，用户名或密码错误");
-        return "login";
-    }
-
     private Timestamp getCurrentTime() {
         return new Timestamp(new Date().getTime());
     }
@@ -338,7 +331,6 @@ public class MainController {
         List<Orders> pendingOrders = new ArrayList<Orders>();
         List<Orders> receivedOrders = new ArrayList<Orders>();
         for(int i = 0; i<allOrders.size(); i++) {
-            //allOrders.get(i).setOrders_details(orders_detailsRepository.findOrders_detailsByOrders(allOrders.get(i)));
             switch (allOrders.get(i).getOrders_status()) {
                 case 1: {
                     unfilledOrders.add(allOrders.get(i));

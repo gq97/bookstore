@@ -36,8 +36,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/login")
-    public String login(Model model) {
+    public String login() {
         return "login";
+    }
+
+    @RequestMapping("login-error")
+    public String login_error(Model model){
+        model.addAttribute("login_error", "login_error");
+        return "redirect:/login";
     }
 
     @RequestMapping(value = "/login-success")
@@ -65,9 +71,9 @@ public class UserController {
 
     //更新密码
     @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
-    public String updateUser(Model model, String username, String oldPassword, String newPassword){
+    public String updateUser(Model model, String user_id, String oldPassword, String newPassword){
         System.out.println("updateUser...");
-        if(!userRepository.findById(username).isPresent()){
+        if(!userRepository.findById(user_id).isPresent()){
             return "redirect:json/false.json";
         }
         User user = getUser();

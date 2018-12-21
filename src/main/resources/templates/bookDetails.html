@@ -46,11 +46,11 @@
 
             <div class="myMargin">
                 定价：
-                <span  style="text-decoration:line-through;" th:text="${book.book_price}"></span>
+                <span  style="text-decoration:line-through;" th:text="'￥'+${book.book_price}"></span>
             </div>
             <div class="myMargin">
                 现价：
-                <span class="price" th:text="${#numbers.formatDecimal(book.book_price*book.book_discount*0.1, 0, 2)}+'（'+${book.book_discount}+'折）'"></span>
+                <span class="price" th:text="'￥'+${#numbers.formatDecimal(book.book_price*book.book_discount*0.1, 0, 2)}+'（'+${book.book_discount}+'折）'"></span>
             </div>
 
 
@@ -125,7 +125,7 @@
                     <hr>
                     <div class="box-text" th:text="${comment.comment_text}"></div>
                     <div class="box-text">
-                        <img class="image2"th:src="${comment.comment_image}" >
+                        <img th:if="${comment.comment_image.length()} gt 0" class="image2"th:src="${comment.comment_image}" >
                     </div>
 
                 </div>
@@ -138,9 +138,7 @@
 </div>
 </body>
 <script>
-var book_amount = $("#book_amount").val();
-var book_id = $("#book_id").val();
-var data = "book_id="+book_id+"&book_amount="+book_amount;
+
 var navI = document.getElementById("navI");
 var navII = document.getElementById("navII");
 function showNavI() {
@@ -153,28 +151,31 @@ function showNavII() {
 }
 
 function addToCart() {
-var addResult = "";
-$.ajax({
-    type: "POST",
-    url: "[[@{/addToCart}]]",
-    data: data,
-    dataType: "json",
-    async: false,
-    success: function(result) {
-        if(result == true) {
-            addResult = "true";
+    var book_amount = $("#book_amount").val();
+    var book_id = $("#book_id").val();
+    var data = "book_id="+book_id+"&book_amount="+book_amount;
+    var addResult = "";
+    $.ajax({
+        type: "POST",
+        url: "[[@{/addToCart}]]",
+        data: data,
+        dataType: "json",
+        async: false,
+        success: function(result) {
+            if(result == true) {
+                addResult = "true";
+            }
         }
+    });
+    if(addResult == "true") {
+        layer.confirm('前往购物车？', {icon: 1, title:'添加成功',btn:['前往购物车','继续浏览']},
+            function(){
+                window.location.href = "/cart";
+            },
+            function(index){
+                layer.close(index);}
+        );
     }
-});
-if(addResult == "true") {
-    layer.confirm('前往购物车？', {icon: 1, title:'添加成功',btn:['前往购物车','继续浏览']},
-        function(){
-            window.location.href = "/cart";
-        },
-        function(index){
-            layer.close(index);}
-    );
-}
 }
 
 </script>

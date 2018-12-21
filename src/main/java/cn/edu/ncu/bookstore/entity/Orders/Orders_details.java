@@ -34,7 +34,7 @@ public class Orders_details {
         this.orders = orders;
         this.book = book;
         this.book_number = book_number;
-        this.book_price = book.getBook_realPrice() * book_number;
+        this.book_price = (int)(book.getBook_realPrice() * book_number * 100 + 0.5) / 100.0;
     }
 
     public OrdersPK getOrdersPK() {

@@ -32,6 +32,11 @@
     color: white;
 }
 
+.layout {
+    margin:20px 150px;
+    width: 1000px;
+}
+
 .mybar li a:hover:not(.active) {
     background-color: #555;
     color: white;
